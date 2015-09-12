@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using SportsEvents.Web.Models;
 
@@ -12,8 +13,9 @@ namespace SportsEvents.Web.Controllers
 {
     public class RootController : Controller
     {
-        ApplicationDbContext context = new ApplicationDbContext();
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext _dbContext;
+
         // GET: Root
         public ActionResult Index()
         {
@@ -29,28 +31,68 @@ namespace SportsEvents.Web.Controllers
             }
             set { _userManager = value; }
         }
-
+        public ApplicationDbContext DbContext
+        {
+            get
+            {
+                return _dbContext ??
+                       HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+            }
+            set { _dbContext = value; }
+        }
         public async Task<ActionResult> Enable()
         {
-            ViewBag.Message = "Root Already Exists";
-            if (!await context.Users.AnyAsync(user => user.UserName == "root"))
+            if (!Request.IsLocal)
             {
-                await UserManager.CreateAsync(new ApplicationUser() { UserName = "root@root.com", Email = "root@root.com" },"Root1_");
+                ViewBag.Message = "Not Authorized";
+                return View();
+            }
+            if (!await DbContext.Roles.AnyAsync(role => role.Name == "admin"))
+            {
+                DbContext.Roles.Add(new IdentityRole() { Name = "admin" });
+                await DbContext.SaveChangesAsync();
+            }
+            ApplicationUser user;
+            if (!await UserManager.Users.AnyAsync(usr => usr.UserName == "root"))
+            {
+                user = new ApplicationUser() { UserName = "root", Email = "root@root.com" };
+                var rootCreateResult = await UserManager.CreateAsync(user, "Root1_");
 
-                var result = await UserManager.AddToRoleAsync("root", "admin");
-                if (result.Succeeded)
+                if (!rootCreateResult.Succeeded)
                 {
-                    ViewBag.Message = "Root Successfuly Created";
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
+                    foreach (var error in rootCreateResult.Errors)
                     {
                         ViewBag.Message += error;
                     }
+                    return View();
                 }
             }
-           
+            else
+            {
+                user = await UserManager.Users.SingleAsync(e => e.UserName == "root");
+            }
+
+            if (!await UserManager.IsInRoleAsync(user.Id, "admin"))
+            {
+                var rootRoleResult = await UserManager.AddToRoleAsync(user.Id, "admin");
+                if (!rootRoleResult.Succeeded)
+                {
+                    foreach (var error in rootRoleResult.Errors)
+                    {
+                        ViewBag.Message += error;
+                    }
+                    return View();
+                }
+
+            }
+            else
+            {
+                ViewBag.Message = "Root Already Exists";
+                return View();
+
+            }
+
+            ViewBag.Message = "Root Successfuly Created";
             return View();
         }
     }

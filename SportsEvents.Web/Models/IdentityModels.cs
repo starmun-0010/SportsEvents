@@ -21,7 +21,7 @@ namespace SportsEvents.Web.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("SportsEvents", throwIfV1Schema: false)
         {
         }
 
