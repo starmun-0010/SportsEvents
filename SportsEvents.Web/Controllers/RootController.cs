@@ -42,16 +42,19 @@ namespace SportsEvents.Web.Controllers
         }
         public async Task<ActionResult> Enable()
         {
+            //Not authorized if request is not local
             if (!Request.IsLocal)
             {
                 ViewBag.Message = "Not Authorized";
                 return View();
             }
+            //if role admin does not exist, create it
             if (!await DbContext.Roles.AnyAsync(role => role.Name == "admin"))
             {
                 DbContext.Roles.Add(new IdentityRole() { Name = "admin" });
                 await DbContext.SaveChangesAsync();
             }
+            //if user root does not exist create it
             ApplicationUser user;
             if (!await UserManager.Users.AnyAsync(usr => usr.UserName == "root"))
             {
@@ -66,12 +69,12 @@ namespace SportsEvents.Web.Controllers
                     }
                     return View();
                 }
-            }
+            } //if user root exists and role is not assigned, get the user
             else
             {
                 user = await UserManager.Users.SingleAsync(e => e.UserName == "root");
             }
-
+            // if user is not in role then assign the role
             if (!await UserManager.IsInRoleAsync(user.Id, "admin"))
             {
                 var rootRoleResult = await UserManager.AddToRoleAsync(user.Id, "admin");
