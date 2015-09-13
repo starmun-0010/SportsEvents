@@ -8,7 +8,7 @@ namespace SportsEvents.Web.Repository
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Event> Enents { get; set; }
+        public DbSet<Event> Events { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Organizer> Organizers { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
