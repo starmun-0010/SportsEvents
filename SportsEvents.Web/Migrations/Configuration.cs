@@ -7,15 +7,15 @@ namespace SportsEvents.Web.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<SportsEventsDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "SportsEvents.Web.Models.ApplicationDbContext";
+            ContextKey = "SportsEvents.Web.Repository.SportsEventsDbContext";
         }
 
-        protected override void Seed(ApplicationDbContext context)
+        protected override void Seed(SportsEventsDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

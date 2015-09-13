@@ -20,7 +20,10 @@ namespace SportsEvents.Web.Controllers
         {
             return View(await DbContext.Events.ToListAsync());
         }
-
+        public async Task<ActionResult> Search(string searchText)
+        {
+            return View(await DbContext.Events.Where(e => e.Sport.Name == searchText).ToListAsync());
+        }
         // GET: Events/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -47,7 +50,7 @@ namespace SportsEvents.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,StartingPrice,BeginDate,EndDate,Address,Description,Details,IconLink,VideoLink,ExternalLink,Coordinates")] Event @event)
+        public async Task<ActionResult> Create([Bind(Include = "Id,StartingPrice,BeginDate,EndDate,Address,Description,Details,IconLink,VideoLink,ExternalLink")] Event @event)
         {
             if (ModelState.IsValid)
             {

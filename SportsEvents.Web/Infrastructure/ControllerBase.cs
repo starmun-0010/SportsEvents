@@ -11,7 +11,7 @@ namespace SportsEvents.Web.Infrastructure
     public class ControllerBase : Controller
     {
         private ApplicationUserManager _userManager;
-        private ApplicationDbContext _dbContext;
+        private SportsEventsDbContext _dbContext;
         public ApplicationUserManager UserManager
         {
             get
@@ -21,12 +21,12 @@ namespace SportsEvents.Web.Infrastructure
             }
             set { _userManager = value; }
         }
-        public ApplicationDbContext DbContext
+        public SportsEventsDbContext DbContext
         {
             get
             {
                 return _dbContext ??
-                       (_dbContext = HttpContext.GetOwinContext().Get<ApplicationDbContext>());
+                       (_dbContext = HttpContext.GetOwinContext().Get<SportsEventsDbContext>());
             }
             set { _dbContext = value; }
         }
