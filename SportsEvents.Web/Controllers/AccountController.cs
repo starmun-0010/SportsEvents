@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SportsEvents.Web.Models;
+using SportsEvents.Web.ViewModels;
 
 namespace SportsEvents.Web.Controllers
 {

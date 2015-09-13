@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using SportsEvents.Web.Models;
+using SportsEvents.Web.Repository;
 
 namespace SportsEvents.Web
 {

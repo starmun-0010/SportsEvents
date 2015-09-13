@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using SportsEvents.Web.Models;
+using SportsEvents.Web.Repository;
 
 namespace SportsEvents.Web
 {

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using SportsEvents.Web.Models;
+using SportsEvents.Web.Repository;
 
 namespace SportsEvents.Web.Controllers
 {
