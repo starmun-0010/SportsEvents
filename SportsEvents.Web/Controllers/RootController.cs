@@ -9,13 +9,12 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using SportsEvents.Web.Models;
 using SportsEvents.Web.Repository;
+using ControllerBase = SportsEvents.Web.Infrastructure.ControllerBase;
 
 namespace SportsEvents.Web.Controllers
 {
-    public class RootController : Controller
+    public class RootController : ControllerBase
     {
-        private ApplicationUserManager _userManager;
-        private ApplicationDbContext _dbContext;
 
         // GET: Root
         public ActionResult Index()
@@ -23,24 +22,7 @@ namespace SportsEvents.Web.Controllers
             return View();
         }
 
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ??
-                       HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            set { _userManager = value; }
-        }
-        public ApplicationDbContext DbContext
-        {
-            get
-            {
-                return _dbContext ??
-                       HttpContext.GetOwinContext().Get<ApplicationDbContext>();
-            }
-            set { _dbContext = value; }
-        }
+
         public async Task<ActionResult> Enable()
         {
             //Not authorized if request is not local
