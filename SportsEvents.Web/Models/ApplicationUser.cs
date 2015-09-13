@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -7,6 +8,8 @@ namespace SportsEvents.Web.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public List<Message> Messages { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

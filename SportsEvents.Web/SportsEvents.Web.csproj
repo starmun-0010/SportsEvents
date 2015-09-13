@@ -174,13 +174,34 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509131021139_Init.cs" />
+    <Compile Include="Migrations\201509131021139_Init.Designer.cs">
+      <DependentUpon>201509131021139_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509131047269_relationsUpdate.cs" />
+    <Compile Include="Migrations\201509131047269_relationsUpdate.Designer.cs">
+      <DependentUpon>201509131047269_relationsUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509131050335_TableRename.cs" />
+    <Compile Include="Migrations\201509131050335_TableRename.Designer.cs">
+      <DependentUpon>201509131050335_TableRename.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509131056032_UpdateSomething.cs" />
+    <Compile Include="Migrations\201509131056032_UpdateSomething.Designer.cs">
+      <DependentUpon>201509131056032_UpdateSomething.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509131101125_Geography.cs" />
+    <Compile Include="Migrations\201509131101125_Geography.Designer.cs">
+      <DependentUpon>201509131101125_Geography.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\EventType.cs" />
-    <Compile Include="Models\Organizers.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Organizer.cs" />
     <Compile Include="Models\Sport.cs" />
     <Compile Include="Models\Visitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -257,6 +278,23 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201509131021139_Init.resx">
+      <DependentUpon>201509131021139_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509131047269_relationsUpdate.resx">
+      <DependentUpon>201509131047269_relationsUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509131050335_TableRename.resx">
+      <DependentUpon>201509131050335_TableRename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509131056032_UpdateSomething.resx">
+      <DependentUpon>201509131056032_UpdateSomething.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509131101125_Geography.resx">
+      <DependentUpon>201509131101125_Geography.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

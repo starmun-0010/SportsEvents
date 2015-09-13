@@ -10,12 +10,26 @@ namespace SportsEvents.Web.Repository
     {
         public DbSet<Event> Enents { get; set; }
         public DbSet<Admin> Admins { get; set; }
-        public DbSet<Organizers> Organizers { get; set; }
+        public DbSet<Organizer> Organizers { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
-
+        public DbSet<Message> Messages { get; set; }
         public ApplicationDbContext()
             : base("SportsEvents", throwIfV1Schema: false)
         {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Visitor>().Map(e => e.ToTable("Visitors"));
+            modelBuilder.Entity<Admin>().Map(e => e.ToTable("Admins"));
+            modelBuilder.Entity<Organizer>().Map(e => e.ToTable("Organiers"));
+
+            modelBuilder.Entity<Event>().HasMany(e => e.RegisteredVisitors).WithMany(e => e.RegisteredEvents).Map(e => e.ToTable("RegisterdEventVisitors"));
+            modelBuilder.Entity<Event>().HasMany(e => e.BookmarkerVisitors).WithMany(e => e.BookmarkedEvents).Map(e => e.ToTable("BookmarkerEventVisitors"));
+            modelBuilder.Entity<Event>().HasMany(e => e.RegisterRequestVisitors).WithMany(e => e.RegisterRequestEvents).Map(e => e.ToTable("RegisterRequestEventVisitors"));
+
+
         }
 
         public static ApplicationDbContext Create()
