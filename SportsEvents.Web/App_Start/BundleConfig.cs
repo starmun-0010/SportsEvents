@@ -19,6 +19,10 @@ namespace SportsEvents.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
+            //app bundels
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                        "~/Scripts/App/app-*"));
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));

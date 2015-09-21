@@ -8,7 +8,7 @@ namespace SportsEvents.Web.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public List<Message> Messages { get; set; }
+        public ICollection<Message> Messages { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

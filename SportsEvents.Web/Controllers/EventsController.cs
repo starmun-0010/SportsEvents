@@ -156,5 +156,7 @@ namespace SportsEvents.Web.Controllers
             }
             base.Dispose(disposing);
         }
+
+       
     }
 }

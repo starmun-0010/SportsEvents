@@ -1,79 +1,86 @@
-﻿@model SportsEvents.Web.Controllers.EventsViewModel
-
-@foreach (var _event in Model.Events)
-{
-    <div class="event">
-        <div class="row ">
-            <div class="col-xs-2 col-lg-2 icon">
-                <a href="@_event.ExternalLink">
-                    <img height="100" width="100" src="@_event.IconLink" />
-                </a>
-            </div>
-            <div class="col-xs-8 col-lg-8 header">
-                <a href="@_event.ExternalLink">
-                    <h4 class="description">
-                        @_event.Description
-                    </h4>
-                </a>
-                <div class="date">
-                    <small>
-                        @if (_event.BeginDate != null)
-                        {
-                            @_event.BeginDate.Value.ToLongDateString()
-
-                            if (_event.EndDate != null && _event.BeginDate != _event.EndDate)
+﻿@model SportsEvents.Web.ViewModels.EventsViewModel
+<div class="batch">
+    @foreach (var _event in Model.Events)
+    {
+        <div class="event">
+            <div class="row ">
+                <div class="col-xs-2 col-lg-2 icon">
+                    <a href="@_event.ExternalLink">
+                        <img height="100" width="100" src="@_event.IconLink"/>
+                    </a>
+                </div>
+                <div class="col-xs-8 col-lg-8 header">
+                    <a href="@_event.ExternalLink">
+                        <h4 class="description">
+                            @_event.Description
+                        </h4>
+                    </a>
+                    <div class="date">
+                        <small>
+                            @if (_event.BeginDate != null)
                             {
-                                @: -
-                                @_event.EndDate.Value.ToLongDateString()
+                                @_event.BeginDate.Value.ToLongDateString()
+
+                                if (_event.EndDate != null && _event.BeginDate != _event.EndDate)
+                                {
+                                    @: -
+                                    @_event.EndDate.Value.ToLongDateString()
+                                }
                             }
-                        }
-                    </small>
-                </div><div>
-                    <span class="date">AT @_event.BeginDate.Value.ToShortTimeString()</span>
-            </div>
+                        </small>
+                    </div>
+                    <div>
+                        <span class="date">AT @_event.BeginDate.Value.ToShortTimeString()</span>
+                    </div>
 
-            <div class="sport-event-type">
-                <span>
-                    BY
-                    @if (_event.Organizer != null)
+                    <div class="sport-event-type">
+                        <span>
+                            BY
+                            @if (_event.Organizer != null)
+                            {
+                                <a>@_event.Organizer.UserName</a>
+                            }
+
+                        </span>
+                    </div>
+                </div>
+                <div class="row col-xs-2 col-lg-2 side">
+                    <div row>
+                        <span class=" col-sm-2 col-lg-2 glyphicon glyphicon-euro ">@_event.StartingPrice</span>
+                    </div>
+                    <div class="row sport">
+                        <a class="col-sm-12 col-lg-12">@_event.Sport.Name</a>
+                    </div>
+
+                    <div class="row event-type">
+                        <a class="col-sm-12 col-lg-12">@_event.EventType.Name</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row details">
+                <p class="col-xs-12 col-lg-12">
+
+                    @if (_event.Details.Length > 200)
                     {
-                        <a>@_event.Organizer.UserName</a>
+                        @_event.Details.Substring(0, 199)
+                        @:...
                     }
+                    else
+                    {
+                        @_event.Details
+                    }
+                </p>
+            </div>
+            <div class=" row controls">
 
-                </span>
+
+                <a class="col-lg-1 col-sm-1 glyphicon glyphicon-heart-empty"></a>
             </div>
         </div>
-        <div class="row col-xs-2 col-lg-2 side">
-            <div row>
-                <span class=" col-sm-2 col-lg-2 glyphicon glyphicon-euro ">@_event.StartingPrice</span>
-            </div>
-            <div class="row sport">
-                <a class="col-sm-12 col-lg-12">@_event.Sport.Name</a>
-            </div>
-
-            <div class="row event-type">
-                <a class="col-sm-12 col-lg-12">@_event.EventType.Name</a>
-            </div>
-        </div>
-    </div>
-    <div class="row details">
-        <p class="col-xs-12 col-lg-12">
-
-            @if (_event.Details.Length > 200)
-                {
-                @_event.Details.Substring(0, 199)
-                @:...
-                }
-                else
-                {
-                @_event.Details
-            }
-        </p>
-    </div>
-    <div class=" row controls">
-
-
-        <a class="col-lg-1 col-sm-1 glyphicon glyphicon-heart-empty"></a>
-    </div>
+    }
 </div>
-}
+<div id="statistics">
+    <input type="text" hidden id="skip" value="@Model.CurrentSkip" />
+    <input hidden id="take" value="@Model.CurrentTake" />
+    <input hidden id="count" value="@Model.Count" />
+</div>

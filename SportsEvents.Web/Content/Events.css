@@ -15,23 +15,42 @@
     box-shadow: 0 0 5px 1px rgb(193, 193, 193);
 }
 
+#events {
+  
+}
+
 .header {
-   
-   
     margin: 0;
 }
+
+.loading-hidden {
+    display: none;
+    visibility: collapse;
+}
+
 .date {
     color: gray;
     font-size: 13px;
     text-wrap: normal;
 }
-.icon {
 
-   
+.loading {
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    text-align: center;
 }
+
+    .loading img {
+    }
+
+.icon {
+}
+
 .side {
     font-size: 12px;
 }
+
 .description {
     /*padding: 0;
     margin: 5px 0 0 0;*/

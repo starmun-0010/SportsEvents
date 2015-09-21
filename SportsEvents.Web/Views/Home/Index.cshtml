@@ -1,12 +1,16 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
     <img class="banner" src="https://placehold.it/900x200?text=banner" />
 </div>
-<section id="events">
-    @{
-        Html.RenderAction("Events");
-    }
+<section class="partial-contents" id="events" data-url="@Url.Action("Events")">
+
+    <div id="loading-gif" class="loading">
+        <img src="../../Resources/Loading.gif" />
+        <p>Loading...</p>
+    </div>
+
 </section>

@@ -22,9 +22,9 @@ namespace SportsEvents.Web.Models
         public string ExternalLink { get; set; }
         public DbGeography Coordinates { get; set; }
         public Organizer Organizer { get; set; }
-        public List<Visitor> BookmarkerVisitors { get; set; }
-        public List<Visitor> RegisterRequestVisitors { get; set; }
-        public List<Visitor> RegisteredVisitors { get; set; }
+        public ICollection<Visitor> BookmarkerVisitors { get; set; }
+        public ICollection<Visitor> RegisterRequestVisitors { get; set; }
+        public ICollection<Visitor> RegisteredVisitors { get; set; }
 
 
     }

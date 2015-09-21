@@ -7,9 +7,19 @@ namespace SportsEvents.Web.Infrastructure
 {
     public class ControllerBase : Controller
     {
-        private SportsEventsDbContext _dbContext;
         private SportsEventsRepository _repository;
         private ApplicationUserManager _userManager;
+        private SportsEventsDbContext _dbContext;
+
+        public ControllerBase(SportsEventsDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        protected ControllerBase() : this(new SportsEventsDbContext())
+        {
+
+        }
 
         public SportsEventsRepository Repository => _repository ?? (_repository = new SportsEventsRepository(DbContext))
             ;
@@ -18,6 +28,7 @@ namespace SportsEvents.Web.Infrastructure
                                                      (_userManager =
                                                          HttpContext.GetOwinContext()
                                                              .GetUserManager<ApplicationUserManager>());
+
 
         public SportsEventsDbContext DbContext => _dbContext ??
                                                    (_dbContext =

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Web;
 using SportsEvents.Web.Models;
 using SportsEvents.Web.Repository;
@@ -16,7 +18,8 @@ namespace SportsEvents.Web.Infrastructure
         {
             _dbContext = dbContext;
         }
-        protected SportsEventsDbContext DbContext => _dbContext ?? (_dbContext = new SportsEventsDbContext());
+        protected SportsEventsDbContext DbContextSingelton => _dbContext ?? (_dbContext = new SportsEventsDbContext());
+        protected SportsEventsDbContext DbContext => new SportsEventsDbContext();
 
         public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
         {
@@ -27,14 +30,14 @@ namespace SportsEvents.Web.Infrastructure
             return DbContext.Set<T>().Where(predicate);
         }
 
-        public int Count(Expression<Func<T, bool>> predicate)
+        public Task<int> CountAsync(Expression<Func<T, bool>> predicate)
         {
-            return DbContext.Set<T>().Count(predicate);
+            return DbContext.Set<T>().CountAsync(predicate);
         }
 
-        public long Count()
+        public Task<long> CountAsync()
         {
-            return DbContext.Set<Event>().LongCount();
+            return DbContext.Set<Event>().LongCountAsync();
         }
     }
 }

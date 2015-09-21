@@ -4,7 +4,7 @@ namespace SportsEvents.Web.Models
 {
     public class Organizer : ApplicationUser
     {
-        public List<Event> Events { get; set; }
+        public ICollection<Event> Events { get; set; }
 
 
     }
