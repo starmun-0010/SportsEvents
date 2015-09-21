@@ -1,0 +1,43 @@
+﻿body {
+    background: #f5f8fa;
+}
+
+.event {
+    margin: 0 auto 10px auto;
+    padding: 10px;
+    width: 700px;
+    background: white;
+    -webkit-box-shadow: 0 0 5px 1px #5c5c5c;
+    -moz-box-shadow: 0 0 5px 1px #5c5c5c;
+    -moz-box-shadow: 0 0 5px 1px rgb(193, 193, 193);
+    -ms-box-shadow: 0 0 5px 1px #5c5c5c;
+    box-shadow: 0 0 5px 1px #5c5c5c;
+    box-shadow: 0 0 5px 1px rgb(193, 193, 193);
+}
+
+.header {
+   
+   
+    margin: 0;
+}
+.date {
+    color: gray;
+    font-size: 13px;
+    text-wrap: normal;
+}
+.icon {
+
+   
+}
+.side {
+    font-size: 12px;
+}
+.description {
+    /*padding: 0;
+    margin: 5px 0 0 0;*/
+}
+
+.details {
+    margin-top: 5px;
+    display: run-in;
+}

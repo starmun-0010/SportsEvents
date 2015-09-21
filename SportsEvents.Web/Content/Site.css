@@ -1,8 +1,12 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 70px;
     padding-bottom: 20px;
 }
 
+input[type=text]:focus, textarea:focus {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+}
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
@@ -20,5 +24,79 @@
 input,
 select,
 textarea {
-    max-width: 280px;
 }
+.navbar-inverse .navbar-toggle {
+    border-color: gray;
+    background-color: whitesmoke;
+}
+.navbar-inverse .navbar-toggle:hover
+{    border-color: #51CBEE;
+}
+.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: gray;
+}
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus{
+    background-color: white;
+}
+.navbar-inverse .navbar-toggle:hover .icon-bar , .navbar-inverse .navbar-toggle:focus .icon-bar {
+    background-color: #7fd9f3;
+}
+.navbar-inverse {
+    background-color: #fff;
+    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+}
+
+.banner {
+    height: 200px;
+    width: 100%;
+}
+
+.search {
+}
+
+    .search input {
+        border: 1px solid rgba(0,0,0,0.15);
+        -ms-border-radius: 20px;
+        border-radius: 20px;
+        outline: none;
+    }
+
+        .search input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+            color: lightgray;
+        }
+
+        .search input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+            color: lightgray;
+            opacity: 1;
+        }
+
+        .search input::-moz-placeholder { /* Mozilla Firefox 19+ */
+            color: lightgray;
+            opacity: 1;
+        }
+
+        .search input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: lightgray;
+        }
+
+    .search button {
+        border-radius: 20px;
+        background: transparent;
+        outline: none;
+    }
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-brand {
+    color: rgb(102, 117, 127);
+}
+
+    .navbar-inverse .navbar-brand:hover,
+    .navbar-inverse .navbar-nav > li > a:hover {
+        color: darkgray;
+    }
+
+    .navbar-inverse .navbar-brand:focus,
+    .navbar-inverse .navbar-nav > li > a:focus {
+        color: gray;
+    }

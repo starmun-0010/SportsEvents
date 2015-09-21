@@ -3,11 +3,10 @@
 }
 
 <div class="jumbotron">
-    <img width="700" height="300" src="" />
+    <img class="banner" src="https://placehold.it/900x200?text=banner" />
 </div>
-
-@using (Html.BeginForm("Search", "Events", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
-{
-    <input type="text" id="txtSearch" name="searchText" placeholder="Search" />
-    <input type="submit" id="btnSearch" name="searchButton" />
-}
+<section id="events">
+    @{
+        Html.RenderAction("Events");
+    }
+</section>

@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using SportsEvents.Web.Models;
 using SportsEvents.Web.Repository;
+using SportsEvents.Web.ViewModels.EventViewModels;
 using ControllerBase = SportsEvents.Web.Infrastructure.ControllerBase;
 namespace SportsEvents.Web.Controllers
 {
@@ -49,17 +50,45 @@ namespace SportsEvents.Web.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Organizer", Users = "root")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,StartingPrice,BeginDate,EndDate,Address,Description,Details,IconLink,VideoLink,ExternalLink")] Event @event)
+        public async Task<ActionResult> Create(EventCreateViewModel eventViewModel)
         {
+
+
             if (ModelState.IsValid)
             {
+                var sportTask = DbContext.Sports.SingleAsync(s => s.Name == eventViewModel.Sport);
+                var eventTypeTask = DbContext.EventTypes.SingleAsync(e => e.Name == eventViewModel.EventType);
+                var iconLinkTask = PictureService.CreateLink(eventViewModel.Icon);
+                var picturesTask = PictureService.CreateLinks(eventViewModel.Picture);
+                var organizerTask = DbContext.Organizers.SingleAsync(e => e.Id == User.Identity.GetUserId());
+                await Task.WhenAll(sportTask, eventTypeTask, iconLinkTask, picturesTask);
+
+                var sport = sportTask.Result;
+                var eventType = eventTypeTask.Result;
+
+                var iconLink = iconLinkTask.Result;
+                var pictures = picturesTask.Result;
+                var organizer = organizerTask.Result;
+                var coordinates = DbGeography.FromText(eventViewModel.Latitude?.ToString() + eventViewModel.Longitude?.ToString());
+                if (sport == null)
+                {
+                    sport = new Sport() { Name = eventViewModel.Sport };
+                    DbContext.Sports.Add(sport);
+                }
+                if (eventType == null)
+                {
+                    eventType = new EventType() { Name = eventViewModel.EventType };
+                    DbContext.EventTypes.Add(eventType);
+                }
+                var @event = new Event() { BeginDate = eventViewModel.BeginDate, EndDate = eventViewModel.EndDate, Description = eventViewModel.Description, Details = eventViewModel.Details, Sport = sport, EventType = eventType, ExternalLink = eventViewModel.ExternalLink, IconLink = iconLink, Pictures = pictures, StartingPrice = eventViewModel.StartingPrice, VideoLink = eventViewModel.VideoLink, Organizer = organizer, Coordinates = coordinates };
                 DbContext.Events.Add(@event);
                 await DbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(@event);
+            return View(eventViewModel);
         }
 
         // GET: Events/Edit/5
