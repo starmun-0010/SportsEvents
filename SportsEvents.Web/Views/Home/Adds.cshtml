@@ -1,0 +1,10 @@
+﻿@model List<SportsEvents.Web.Models.Advertisement>
+<div>
+    @foreach (var ad in Model)
+    {
+        <div class="add">
+            <a href="@ad.Link"><img src="@ad.Image" /></a>
+        </div>
+    }
+
+</div>

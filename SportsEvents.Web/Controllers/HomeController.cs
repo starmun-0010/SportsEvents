@@ -18,7 +18,7 @@ namespace SportsEvents.Web.Controllers
         {
             return View();
         }
-        
+
         public ActionResult Events(int skip = 0, int take = 20)
         {
             if (take > 20) take = 20;
@@ -41,6 +41,14 @@ namespace SportsEvents.Web.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public ActionResult Adds()
+        {
+
+            var addsTask = Repository.Advertisements.Where(add => add.Prelogin).ToListAsync();
+
+            return PartialView(addsTask.Result);
         }
     }
 }

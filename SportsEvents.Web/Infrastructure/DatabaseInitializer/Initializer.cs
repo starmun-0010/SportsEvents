@@ -1,25 +1,21 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
+using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using SportsEvents.Web.Models;
 using SportsEvents.Web.Repository;
 
-namespace SportsEvents.Web.Migrations
+namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<SportsEventsDbContext>
+    public class Initializer : DropCreateDatabaseIfModelChanges<SportsEventsDbContext>
     {
-        public Configuration()
-        {
-            ContextKey = "SportsEvents.Web.Repository.SportsEventsDbContext";
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
-        }
 
         protected override void Seed(SportsEventsDbContext context)
         {
+            base.Seed(context);
             if (!context.Events.Any())
             {
                 var usermanager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
@@ -31,7 +27,13 @@ namespace SportsEvents.Web.Migrations
                 var events = new List<Event>();
                 for (int i = 0; i < 20; i++)
                 {
-                    advertisements.Add(new Advertisement() { Image = "https://placehold.it/600x600?text=Add+" + Ipsum.GetWord(), Priority = rand.Next(1, 11), Prelogin = rand.Next(0, 2) == 1, Keywords = Ipsum.GetWord() });
+                    advertisements.Add(new Advertisement()
+                    {
+                        Image = "https://placehold.it/600x600?text=Ad+" + Ipsum.GetWord(),
+                        Priority = rand.Next(1, 11),
+                        Prelogin = rand.Next(0, 2) == 1,
+                        Keywords = Ipsum.GetWord()
+                    });
                 }
                 for (int i = 0; i < 30; i++)
                 {
@@ -65,6 +67,7 @@ namespace SportsEvents.Web.Migrations
                         var beginDate = DateTime.Now.Date + TimeSpan.FromDays(rand.Next(1, 15));
                         var detail = Ipsum.GetPhrase(rand.Next(40, 200));
                         var endDate = beginDate + TimeSpan.FromDays(rand.Next(1, 15));
+                        var organizer = organizers[rand.Next(organizers.Count)];
                         var address = new Address
                         {
                             LineOne = Ipsum.GetPhrase(rand.Next(10)),
@@ -87,18 +90,24 @@ namespace SportsEvents.Web.Migrations
                             Details = detail,
                             EndDate = endDate,
                             StartingPrice = rand.Next(0, 1000),
-                            IconLink = "https://placeholdit.imgix.net/~text?txtsize=25&txt=Icon+" + Ipsum.GetWord() + "&w=100&h=100&+",
+                            IconLink =
+                                "https://placeholdit.imgix.net/~text?txtsize=25&txt=Icon+" + Ipsum.GetWord() +
+                                "&w=100&h=100&+",
                             VideoLink = "https://placehold.it/600x400?text=" + Ipsum.GetWord(),
                             Pictures = pictures,
                             Sport = sport,
+                            SportName = sport.Name,
                             EventType = eventType,
-                            Organizer = organizers[rand.Next(organizers.Count)]
+                            EventTypeName = eventType.Name,
+                            Organizer = organizer,
+
+                            OrganizerName = organizer.UserName
+
                         };
                         events.Add(@event);
                     }
                 }
                 context.Events.AddRange(events);
-
             }
         }
     }

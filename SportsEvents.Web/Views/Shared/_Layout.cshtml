@@ -1,5 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
+@using StackExchange.Profiling;
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,11 +50,14 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/bootstrap") @Scripts.Render("~/bundles/app")
 
-
+    @MiniProfiler.RenderIncludes()
 
 
     @RenderSection("scripts", false)
+  
+
+
 </body>
 </html>

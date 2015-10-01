@@ -9,7 +9,9 @@ namespace SportsEvents.Web.Infrastructure
         public SportsEventsRepository(SportsEventsDbContext dbContext)
         {
             Events = new EFRpository<Event>(dbContext);
+            Advertisements = new EFRpository<Advertisement>(dbContext);
         }
         public IRepository<Event> Events { get; set; }
+        public IRepository<Advertisement> Advertisements { get; set; }
     }
 }

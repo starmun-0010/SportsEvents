@@ -6,11 +6,17 @@
 <div class="jumbotron">
     <img class="banner" src="https://placehold.it/900x200?text=banner" />
 </div>
-<section class="partial-contents" id="events" data-url="@Url.Action("Events")">
+<div class="row content">
+    <section class="col-lg-7 col-md-10 col-lg-push-1 partial-contents-events" id="events" data-url="@Url.Action("Events")">
 
-    <div id="loading-gif" class="loading">
-        <img src="../../Resources/Loading.gif" />
-        <p>Loading...</p>
-    </div>
+        <div id="loading-gif" class="loading">
+            <img src="../../Resources/Loading.gif" />
+            <p>Loading...</p>
+        </div>
 
-</section>
+    </section>
+    <section class="col-lg-2 col-md-2 hidden-sm hidden-xs col-lg-push-2 partial-contents-adds" data-url="@Url.Action("Adds")">
+        <div id="advertiements"></div>
+    </section>
+
+</div>

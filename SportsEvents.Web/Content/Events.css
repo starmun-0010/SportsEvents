@@ -4,8 +4,8 @@
 
 .event {
     margin: 0 auto 10px auto;
-    padding: 10px;
     width: 700px;
+    padding: 10px;
     background: white;
     -webkit-box-shadow: 0 0 5px 1px #5c5c5c;
     -moz-box-shadow: 0 0 5px 1px #5c5c5c;
@@ -16,8 +16,15 @@
 }
 
 #events {
-  
 }
+
+.add {
+    margin-bottom: 5px;
+}
+    .partial-contents-adds img {
+        width: 200px;
+        height: 200px;
+    }
 
 .header {
     margin: 0;

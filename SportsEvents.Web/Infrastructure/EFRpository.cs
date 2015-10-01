@@ -25,7 +25,7 @@ namespace SportsEvents.Web.Infrastructure
         {
             if (typeof(T) == typeof(Event))
             {
-                return DbContext.Set<T>().Include("Sport").Include("EventType").Include("Organizer").Include("Pictures").Where(predicate);
+                return DbContext.Set<T>().Include("Pictures").Where(predicate);
             }
             return DbContext.Set<T>().Where(predicate);
         }

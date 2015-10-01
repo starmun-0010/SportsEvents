@@ -1,7 +1,32 @@
 ﻿$(document).ready(function (e) {
-    $(".partial-contents").each(load);
+    $(".partial-contents-events").each(load);
 
 });
+$(document).ready(function (e) {
+    $(".partial-contents-adds").each(loadAdvertisements);
+
+});
+
+var loadingAdvertisements = false;
+
+function loadAdvertisements(index, item) {
+    if (loadingAdvertisements) {
+        return;
+    }
+
+    loadingAdvertisements = true;
+    var url = $(item).data("url");
+
+    if (url && url.length > 0) {
+        var jxhr = $.get(url, function (data) {
+            $("#advertiements").replaceWith(data);
+            jxhr.always(function () {
+                loadingAdvertisements = false;
+            });
+        });
+    }
+}
+
 var loading = false;
 
 function load(index, item) {
@@ -51,3 +76,4 @@ $(window).scroll(function () {
         }
     }
 });
+

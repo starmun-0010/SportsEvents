@@ -6,7 +6,7 @@
             <div class="row ">
                 <div class="col-xs-2 col-lg-2 icon">
                     <a href="@_event.ExternalLink">
-                        <img height="100" width="100" src="@_event.IconLink"/>
+                        <img height="100" width="100" src="@_event.IconLink" />
                     </a>
                 </div>
                 <div class="col-xs-8 col-lg-8 header">
@@ -36,10 +36,9 @@
                     <div class="sport-event-type">
                         <span>
                             BY
-                            @if (_event.Organizer != null)
-                            {
-                                <a>@_event.Organizer.UserName</a>
-                            }
+
+                            <a>@_event.OrganizerName</a>
+
 
                         </span>
                     </div>
@@ -49,11 +48,11 @@
                         <span class=" col-sm-2 col-lg-2 glyphicon glyphicon-euro ">@_event.StartingPrice</span>
                     </div>
                     <div class="row sport">
-                        <a class="col-sm-12 col-lg-12">@_event.Sport.Name</a>
+                        <a class="col-sm-12 col-lg-12">@_event.SportName</a>
                     </div>
 
                     <div class="row event-type">
-                        <a class="col-sm-12 col-lg-12">@_event.EventType.Name</a>
+                        <a class="col-sm-12 col-lg-12">@_event.EventTypeName</a>
                     </div>
                 </div>
             </div>
