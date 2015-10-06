@@ -33,12 +33,12 @@ namespace SportsEvents.Web.Models
 
         public string OrganizerId { get; set; }
         [ForeignKey("OrganizerId")]
-        public Organizer Organizer { get; set; }
+        public ApplicationUser Organizer { get; set; }
         public string OrganizerName { get; set; }
 
-        public ICollection<Visitor> BookmarkerVisitors { get; set; }
-        public ICollection<Visitor> RegisterRequestVisitors { get; set; }
-        public ICollection<Visitor> RegisteredVisitors { get; set; }
+        public ICollection<ApplicationUser> BookmarkerVisitors { get; set; }
+        public ICollection<ApplicationUser> RegisterRequestVisitors { get; set; }
+        public ICollection<ApplicationUser> RegisteredVisitors { get; set; }
 
 
     }

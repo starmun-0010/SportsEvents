@@ -3,15 +3,73 @@ namespace SportsEvents.Web.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Init : DbMigration
+    public partial class OneUser : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.Advertisements",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Image = c.String(),
+                        Link = c.String(),
+                        Priority = c.Int(nullable: false),
+                        Keywords = c.String(),
+                        Prelogin = c.Boolean(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Events",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        IsFeatured = c.Boolean(nullable: false),
+                        StartingPrice = c.Double(),
+                        BeginDate = c.DateTime(),
+                        EndDate = c.DateTime(),
+                        Address_LineOne = c.String(),
+                        Address_LineTwo = c.String(),
+                        Address_CityName = c.String(),
+                        Address_CountryName = c.String(),
+                        Address_CityId = c.String(),
+                        Description = c.String(),
+                        Details = c.String(),
+                        IconLink = c.String(),
+                        VideoLink = c.String(),
+                        ExternalLink = c.String(),
+                        Coordinates = c.Geography(),
+                        SportId = c.Int(nullable: false),
+                        SportName = c.String(),
+                        EventTypeId = c.Int(nullable: false),
+                        EventTypeName = c.String(),
+                        OrganizerId = c.String(maxLength: 128),
+                        OrganizerName = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.OrganizerId)
+                .ForeignKey("dbo.EventTypes", t => t.EventTypeId, cascadeDelete: true)
+                .ForeignKey("dbo.Sports", t => t.SportId, cascadeDelete: true)
+                .Index(t => t.SportId)
+                .Index(t => t.EventTypeId)
+                .Index(t => t.OrganizerId);
+            
             CreateTable(
                 "dbo.AspNetUsers",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
+                        Link = c.String(),
+                        ContactName = c.String(),
+                        Address_LineOne = c.String(),
+                        Address_LineTwo = c.String(),
+                        Address_CityName = c.String(),
+                        Address_CountryName = c.String(),
+                        Address_CityId = c.String(),
+                        OrganiztionName = c.String(),
+                        OrganizationDecription = c.String(),
+                        OrganaiztionLogo = c.Binary(),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
@@ -23,9 +81,12 @@ namespace SportsEvents.Web.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
+                        ContactDetails_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
+                .ForeignKey("dbo.ContactDetails", t => t.ContactDetails_Id)
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex")
+                .Index(t => t.ContactDetails_Id);
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -39,6 +100,21 @@ namespace SportsEvents.Web.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.ContactDetails",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                        Email = c.String(),
+                        Address_LineOne = c.String(),
+                        Address_LineTwo = c.String(),
+                        Address_CityName = c.String(),
+                        Address_CountryName = c.String(),
+                        Address_CityId = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.AspNetUserLogins",
@@ -57,19 +133,19 @@ namespace SportsEvents.Web.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        SenderId = c.String(maxLength: 128),
+                        ReceiverId = c.String(maxLength: 128),
                         Text = c.String(),
                         Time = c.DateTime(nullable: false),
                         ApplicationUser_Id = c.String(maxLength: 128),
-                        Receiver_Id = c.String(maxLength: 128),
-                        Sender_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.ReceiverId)
+                .ForeignKey("dbo.AspNetUsers", t => t.SenderId)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Receiver_Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Sender_Id)
-                .Index(t => t.ApplicationUser_Id)
-                .Index(t => t.Receiver_Id)
-                .Index(t => t.Sender_Id);
+                .Index(t => t.SenderId)
+                .Index(t => t.ReceiverId)
+                .Index(t => t.ApplicationUser_Id);
             
             CreateTable(
                 "dbo.AspNetUserRoles",
@@ -85,34 +161,6 @@ namespace SportsEvents.Web.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
-                "dbo.Events",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        StartingPrice = c.Double(),
-                        BeginDate = c.DateTime(),
-                        EndDate = c.DateTime(),
-                        Address_LineOne = c.String(),
-                        Address_LineTwo = c.String(),
-                        Description = c.String(),
-                        Details = c.String(),
-                        IconLink = c.String(),
-                        VideoLink = c.String(),
-                        ExternalLink = c.String(),
-                        Coordinates = c.Geography(),
-                        EventType_Id = c.Int(),
-                        Organizer_Id = c.String(maxLength: 128),
-                        Sport_Id = c.Int(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.EventTypes", t => t.EventType_Id)
-                .ForeignKey("dbo.Organizers", t => t.Organizer_Id)
-                .ForeignKey("dbo.Sports", t => t.Sport_Id)
-                .Index(t => t.EventType_Id)
-                .Index(t => t.Organizer_Id)
-                .Index(t => t.Sport_Id);
-            
-            CreateTable(
                 "dbo.EventTypes",
                 c => new
                     {
@@ -122,11 +170,23 @@ namespace SportsEvents.Web.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.Pictures",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Url = c.String(),
+                        Event_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Events", t => t.Event_Id)
+                .Index(t => t.Event_Id);
+            
+            CreateTable(
                 "dbo.Sports",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.Int(nullable: false),
+                        Name = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -145,130 +205,97 @@ namespace SportsEvents.Web.Migrations
                 c => new
                     {
                         Event_Id = c.Int(nullable: false),
-                        Visitor_Id = c.String(nullable: false, maxLength: 128),
+                        ApplicationUser_Id = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => new { t.Event_Id, t.Visitor_Id })
+                .PrimaryKey(t => new { t.Event_Id, t.ApplicationUser_Id })
                 .ForeignKey("dbo.Events", t => t.Event_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Visitors", t => t.Visitor_Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id, cascadeDelete: true)
                 .Index(t => t.Event_Id)
-                .Index(t => t.Visitor_Id);
+                .Index(t => t.ApplicationUser_Id);
             
             CreateTable(
                 "dbo.RegisterdEventVisitors",
                 c => new
                     {
                         Event_Id = c.Int(nullable: false),
-                        Visitor_Id = c.String(nullable: false, maxLength: 128),
+                        ApplicationUser_Id = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => new { t.Event_Id, t.Visitor_Id })
+                .PrimaryKey(t => new { t.Event_Id, t.ApplicationUser_Id })
                 .ForeignKey("dbo.Events", t => t.Event_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Visitors", t => t.Visitor_Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id, cascadeDelete: true)
                 .Index(t => t.Event_Id)
-                .Index(t => t.Visitor_Id);
+                .Index(t => t.ApplicationUser_Id);
             
             CreateTable(
                 "dbo.RegisterRequestEventVisitors",
                 c => new
                     {
                         Event_Id = c.Int(nullable: false),
-                        Visitor_Id = c.String(nullable: false, maxLength: 128),
+                        ApplicationUser_Id = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => new { t.Event_Id, t.Visitor_Id })
+                .PrimaryKey(t => new { t.Event_Id, t.ApplicationUser_Id })
                 .ForeignKey("dbo.Events", t => t.Event_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Visitors", t => t.Visitor_Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id, cascadeDelete: true)
                 .Index(t => t.Event_Id)
-                .Index(t => t.Visitor_Id);
-            
-            CreateTable(
-                "dbo.Admins",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Id)
-                .Index(t => t.Id);
-            
-            CreateTable(
-                "dbo.Organizers",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Id)
-                .Index(t => t.Id);
-            
-            CreateTable(
-                "dbo.Visitors",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Coordinates = c.Geography(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Id)
-                .Index(t => t.Id);
+                .Index(t => t.ApplicationUser_Id);
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Visitors", "Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Organizers", "Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Admins", "Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Messages", "Sender_Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Messages", "Receiver_Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Events", "Sport_Id", "dbo.Sports");
-            DropForeignKey("dbo.RegisterRequestEventVisitors", "Visitor_Id", "dbo.Visitors");
+            DropForeignKey("dbo.Events", "SportId", "dbo.Sports");
+            DropForeignKey("dbo.RegisterRequestEventVisitors", "ApplicationUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.RegisterRequestEventVisitors", "Event_Id", "dbo.Events");
-            DropForeignKey("dbo.RegisterdEventVisitors", "Visitor_Id", "dbo.Visitors");
+            DropForeignKey("dbo.RegisterdEventVisitors", "ApplicationUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.RegisterdEventVisitors", "Event_Id", "dbo.Events");
-            DropForeignKey("dbo.Events", "Organizer_Id", "dbo.Organizers");
-            DropForeignKey("dbo.Events", "EventType_Id", "dbo.EventTypes");
-            DropForeignKey("dbo.BookmarkerEventVisitors", "Visitor_Id", "dbo.Visitors");
+            DropForeignKey("dbo.Pictures", "Event_Id", "dbo.Events");
+            DropForeignKey("dbo.Events", "EventTypeId", "dbo.EventTypes");
+            DropForeignKey("dbo.BookmarkerEventVisitors", "ApplicationUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.BookmarkerEventVisitors", "Event_Id", "dbo.Events");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Messages", "ApplicationUser_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Messages", "SenderId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Messages", "ReceiverId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Events", "OrganizerId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUsers", "ContactDetails_Id", "dbo.ContactDetails");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropIndex("dbo.Visitors", new[] { "Id" });
-            DropIndex("dbo.Organizers", new[] { "Id" });
-            DropIndex("dbo.Admins", new[] { "Id" });
-            DropIndex("dbo.RegisterRequestEventVisitors", new[] { "Visitor_Id" });
+            DropIndex("dbo.RegisterRequestEventVisitors", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.RegisterRequestEventVisitors", new[] { "Event_Id" });
-            DropIndex("dbo.RegisterdEventVisitors", new[] { "Visitor_Id" });
+            DropIndex("dbo.RegisterdEventVisitors", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.RegisterdEventVisitors", new[] { "Event_Id" });
-            DropIndex("dbo.BookmarkerEventVisitors", new[] { "Visitor_Id" });
+            DropIndex("dbo.BookmarkerEventVisitors", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.BookmarkerEventVisitors", new[] { "Event_Id" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.Events", new[] { "Sport_Id" });
-            DropIndex("dbo.Events", new[] { "Organizer_Id" });
-            DropIndex("dbo.Events", new[] { "EventType_Id" });
+            DropIndex("dbo.Pictures", new[] { "Event_Id" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
-            DropIndex("dbo.Messages", new[] { "Sender_Id" });
-            DropIndex("dbo.Messages", new[] { "Receiver_Id" });
             DropIndex("dbo.Messages", new[] { "ApplicationUser_Id" });
+            DropIndex("dbo.Messages", new[] { "ReceiverId" });
+            DropIndex("dbo.Messages", new[] { "SenderId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.AspNetUsers", new[] { "ContactDetails_Id" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropTable("dbo.Visitors");
-            DropTable("dbo.Organizers");
-            DropTable("dbo.Admins");
+            DropIndex("dbo.Events", new[] { "OrganizerId" });
+            DropIndex("dbo.Events", new[] { "EventTypeId" });
+            DropIndex("dbo.Events", new[] { "SportId" });
             DropTable("dbo.RegisterRequestEventVisitors");
             DropTable("dbo.RegisterdEventVisitors");
             DropTable("dbo.BookmarkerEventVisitors");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Sports");
+            DropTable("dbo.Pictures");
             DropTable("dbo.EventTypes");
-            DropTable("dbo.Events");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.Messages");
             DropTable("dbo.AspNetUserLogins");
+            DropTable("dbo.ContactDetails");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
+            DropTable("dbo.Events");
+            DropTable("dbo.Advertisements");
         }
     }
 }

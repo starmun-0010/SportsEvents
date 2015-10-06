@@ -10,6 +10,7 @@ namespace SportsEvents.Web.Infrastructure
         private SportsEventsRepository _repository;
         private ApplicationUserManager _userManager;
         private SportsEventsDbContext _dbContext;
+        private ApplicationSignInManager _signInManager;
 
         public ControllerBase(SportsEventsDbContext dbContext)
         {
@@ -33,5 +34,7 @@ namespace SportsEvents.Web.Infrastructure
         public SportsEventsDbContext DbContext => _dbContext ??
                                                    (_dbContext =
                                                        HttpContext.GetOwinContext().Get<SportsEventsDbContext>());
+
+        public ApplicationSignInManager SignInManager => _signInManager ?? (_signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>());
     }
 }

@@ -37,15 +37,16 @@ namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
                 }
                 for (int i = 0; i < 30; i++)
                 {
-                    var organizer = new Organizer()
+                    var organizer = new ApplicationUser()
                     {
                         UserName = Ipsum.GetWord(),
-                        Email = Ipsum.GetWord() + "@" + Ipsum.GetWord() + ".com"
+                        Email = Ipsum.GetWord() + "@" + Ipsum.GetWord() + ".com",
+                        Address= new Address()
                     };
                     usermanager.Create(organizer);
                 }
                 context.Advertisements.AddRange(advertisements);
-                var organizers = context.Organizers.ToList();
+                var organizers = context.Users.ToList();
                 for (var i = 0; i < 20; i++)
                 {
 

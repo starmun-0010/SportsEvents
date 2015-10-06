@@ -62,7 +62,7 @@ namespace SportsEvents.Web.Controllers
                 var eventTypeTask = DbContext.EventTypes.SingleAsync(e => e.Name == eventViewModel.EventType);
                 var iconLinkTask = PictureService.CreateLink(eventViewModel.Icon);
                 var picturesTask = PictureService.CreateLinks(eventViewModel.Picture);
-                var organizerTask = DbContext.Organizers.SingleAsync(e => e.Id == User.Identity.GetUserId());
+                var organizerTask = DbContext.Users.SingleAsync(e => e.Id == User.Identity.GetUserId());
                 await Task.WhenAll(sportTask, eventTypeTask, iconLinkTask, picturesTask);
 
                 var sport = sportTask.Result;

@@ -7,13 +7,13 @@ namespace SportsEvents.Web.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class addvertisement : IMigrationMetadata
+    public sealed partial class OneUser : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addvertisement));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(OneUser));
         
         string IMigrationMetadata.Id
         {
-            get { return "201509201937073_addvertisement"; }
+            get { return "201510062002245_OneUser"; }
         }
         
         string IMigrationMetadata.Source

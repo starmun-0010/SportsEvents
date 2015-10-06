@@ -14,9 +14,6 @@ namespace SportsEvents.Web.Repository
     public class SportsEventsDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Event> Events { get; set; }
-        public DbSet<Admin> Admins { get; set; }
-        public DbSet<Organizer> Organizers { get; set; }
-        public DbSet<Visitor> Visitors { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Sport> Sports { get; set; }
         public DbSet<EventType> EventTypes { get; set; }
@@ -31,9 +28,7 @@ namespace SportsEvents.Web.Repository
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Visitor>().Map(e => e.ToTable("Visitors"));
-            modelBuilder.Entity<Admin>().Map(e => e.ToTable("Admins"));
-            modelBuilder.Entity<Organizer>().Map(e => e.ToTable("Organizers"));
+           
             modelBuilder.ComplexType<Address>();
             modelBuilder.Entity<Event>().HasMany(e => e.RegisteredVisitors).WithMany(e => e.RegisteredEvents).Map(e => e.ToTable("RegisterdEventVisitors"));
             modelBuilder.Entity<Event>().HasMany(e => e.BookmarkerVisitors).WithMany(e => e.BookmarkedEvents).Map(e => e.ToTable("BookmarkerEventVisitors"));
