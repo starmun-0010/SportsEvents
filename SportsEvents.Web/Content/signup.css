@@ -1,10 +1,25 @@
 ﻿body {
 }
 
-.fuck{
+.SUform {
     margin: auto;
     width: 400px;
     border:solid 1px black;
+    -ms-border-radius: 5px;
     border-radius: 5px;
     padding: 10px;
+}
+
+.SUform input[type='text'],
+.SUform input[type='password']{
+    width: 200px;
+    float: right;
+}
+
+.SUform input[type='submit'] {
+        float: right;
+
+}
+
+.SUform label {
 }
