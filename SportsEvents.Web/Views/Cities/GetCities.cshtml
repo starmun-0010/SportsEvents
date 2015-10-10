@@ -1,0 +1,5 @@
+﻿@model List<SportsEvents.Web.Models.City>
+<div id="city" class="col-md-8">
+
+    @Html.DropDownList("CityId", new SelectList(Model, "Id", "Name"), new { @class = "form-control" })
+</div>

@@ -21,6 +21,10 @@ namespace SportsEvents.Web.Models
         public string ExternalLink { get; set; }
         public DbGeography Coordinates { get; set; }
 
+        public int CityId { get; set; }
+        [ForeignKey("CityId")]
+        public City City { get; set; }
+        public string AddressString { get; set; }
         public int SportId { get; set; }
         [ForeignKey("SportId")]
         public Sport Sport { get; set; }

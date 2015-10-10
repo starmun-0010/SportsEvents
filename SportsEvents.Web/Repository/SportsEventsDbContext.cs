@@ -18,6 +18,8 @@ namespace SportsEvents.Web.Repository
         public DbSet<Sport> Sports { get; set; }
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<Advertisement> Advertisements { get; set; }
+        public DbSet<Country> Countries { get; set; }
+
         public SportsEventsDbContext()
             : base("SportsEventsDb", throwIfV1Schema: false)
         {
@@ -33,7 +35,7 @@ namespace SportsEvents.Web.Repository
             modelBuilder.Entity<Event>().HasMany(e => e.RegisteredVisitors).WithMany(e => e.RegisteredEvents).Map(e => e.ToTable("RegisterdEventVisitors"));
             modelBuilder.Entity<Event>().HasMany(e => e.BookmarkerVisitors).WithMany(e => e.BookmarkedEvents).Map(e => e.ToTable("BookmarkerEventVisitors"));
             modelBuilder.Entity<Event>().HasMany(e => e.RegisterRequestVisitors).WithMany(e => e.RegisterRequestEvents).Map(e => e.ToTable("RegisterRequestEventVisitors"));
-
+            
 
         }
 

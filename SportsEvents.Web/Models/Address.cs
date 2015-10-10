@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsEvents.Web.Models
 {
@@ -8,7 +9,7 @@ namespace SportsEvents.Web.Models
         public string LineTwo { get; set; }
         public string CityName { get; set; }
         public string CountryName { get; set; }
-        public string CityId { get; set; }
+                
 
     }
 
@@ -17,8 +18,10 @@ namespace SportsEvents.Web.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string CountryName { get; set; }
+        [ForeignKey("CountryId")]
         public Country Country { get; set; }
         public ICollection<Event> Events { get; set; }
+        public int CountryId { get; set; }
     }
 
     public class Country

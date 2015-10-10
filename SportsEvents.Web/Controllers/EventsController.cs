@@ -157,6 +157,10 @@ namespace SportsEvents.Web.Controllers
             base.Dispose(disposing);
         }
 
-       
+
+        public ActionResult PostEvent()
+        {
+            return View();
+        }
     }
 }

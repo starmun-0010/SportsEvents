@@ -20,7 +20,6 @@ namespace SportsEvents.Web.Migrations
 
         protected override void Seed(SportsEventsDbContext context)
         {
-
             base.Seed(context);
             if (!context.Events.Any())
             {
@@ -29,8 +28,21 @@ namespace SportsEvents.Web.Migrations
                 roleManager.Create(new IdentityRole("Organizer"));
                 var rand = new Random(DateTime.Now.Second);
                 var advertisements = new List<Advertisement>();
-
+                var countries = new List<Country>();
+                var cities = new List<City>();
                 var events = new List<Event>();
+
+                for (int i = 0; i < 20; i++)
+                {
+                    var country = new Country() { Name = Ipsum.GetWord() };
+                    ;
+                    for (int j = 0; j < 20; j++)
+                    {
+                        cities.Add(new City() { Name = Ipsum.GetWord(), Country = country, CountryName = country.Name });
+                    }
+                }
+
+
                 for (int i = 0; i < 20; i++)
                 {
                     advertisements.Add(new Advertisement()
@@ -47,7 +59,7 @@ namespace SportsEvents.Web.Migrations
                     {
                         UserName = Ipsum.GetWord(),
                         Email = Ipsum.GetWord() + "@" + Ipsum.GetWord() + ".com",
-                        Address =  new Address()
+                        Address = new Address()
                     };
                     usermanager.Create(organizer);
                 }
@@ -107,7 +119,7 @@ namespace SportsEvents.Web.Migrations
                             EventType = eventType,
                             EventTypeName = eventType.Name,
                             Organizer = organizer,
-
+                            City = cities[rand.Next(cities.Count)],
                             OrganizerName = organizer.UserName
 
                         };

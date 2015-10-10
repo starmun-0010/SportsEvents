@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -8,13 +11,15 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using SportsEvents.Web.CustomAttirbutes;
 using SportsEvents.Web.Models;
 using SportsEvents.Web.ViewModels;
+using ControllerBase = SportsEvents.Web.Infrastructure.ControllerBase;
 
 namespace SportsEvents.Web.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -23,7 +28,7 @@ namespace SportsEvents.Web.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -35,9 +40,9 @@ namespace SportsEvents.Web.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -121,7 +126,7 @@ namespace SportsEvents.Web.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -138,6 +143,8 @@ namespace SportsEvents.Web.Controllers
         //
         // GET: /Account/Register
         [AllowAnonymous]
+        [Route("Account/Register")]
+
         public ActionResult Register()
         {
             return View();
@@ -148,31 +155,78 @@ namespace SportsEvents.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        [Route("Account/Register/{role}", Name = "Register")]
+        public async Task<ActionResult> Register(string role, RegisterViewModel model)
         {
+
+            if (role != "Organizer" && role != "Vsitor")
+            {
+                return HttpNotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, Address = new Address() };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    return RedirectToAction("Index", "Home");
+                    // For more inf
+                    // Send an email with this link
+                    // string code ormation on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771= await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Plea se confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+
+                    if (role == "Organizer")
+                    {
+
+                        return RedirectToAction("OrganizerInformation", "Account", routeValues: new { name = User.Identity.Name });
+
+
+                    }
                 }
                 AddErrors(result);
+
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
+        public async Task<ActionResult> OrganizerInformation(string name)
+        {
+            if (name != User.Identity.Name)
+            {
+                RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
+            }
+            var countries = await Repository.Countries.AllAsync();
+
+            var model = new RegisterOrganizerViewModel() { Countries = countries, Cities = new List<City>() };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OrganizerInformation(string name, RegisterOrganizerViewModel model)
+        {
+            if (name != User.Identity.Name)
+            {
+                RedirectToAction("Login");
+            }
+            if (ModelState.IsValid)
+            {
+
+                return RedirectToAction("PostEvent", "Events");
+            }
+            var countries = await Repository.Countries.AllAsync();
+            var cities = await Repository.Cities.Where(e => e.CountryId == model.CountryId).ToListAsync();
+            model.Countries = countries;
+            model.Cities = cities;
+            return View(model);
+
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]

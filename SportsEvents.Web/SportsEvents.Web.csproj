@@ -185,11 +185,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CitiesController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PictureService.cs" />
     <Compile Include="Controllers\RootController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="CustomAttirbutes\MaxFileSizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -199,9 +202,9 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\EFRpository.cs" />
     <Compile Include="Infrastructure\SportsEventsRepository.cs" />
-    <Compile Include="Migrations\201510062002245_OneUser.cs" />
-    <Compile Include="Migrations\201510062002245_OneUser.Designer.cs">
-      <DependentUpon>201510062002245_OneUser.cs</DependentUpon>
+    <Compile Include="Migrations\201510092009558_Init.cs" />
+    <Compile Include="Migrations\201510092009558_Init.Designer.cs">
+      <DependentUpon>201510092009558_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
@@ -223,6 +226,7 @@
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="ViewModels\OrganizerControlPanelViewModel.cs" />
     <Compile Include="ViewModels\OrganizerRegisterViewModel.cs" />
+    <Compile Include="ViewModels\RegisterOrganizerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -246,6 +250,7 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Resources\Loading.gif" />
     <Content Include="Scripts\App\app-LoadEvents.js" />
+    <Content Include="Scripts\App\reg-RegisterOrganizer.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
@@ -305,20 +310,24 @@
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Views\Account\OrganizerInformation.cshtml" />
+    <None Include="Views\Cities\GetCities.cshtml" />
+    <None Include="Views\Events\PostEvent.cshtml" />
     <None Include="Views\Events\Search.cshtml" />
     <Content Include="Views\Home\Events.cshtml" />
     <Content Include="Views\Home\Adds.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510062002245_OneUser.resx">
-      <DependentUpon>201510062002245_OneUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510092009558_Init.resx">
+      <DependentUpon>201510092009558_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -37,7 +37,13 @@ namespace SportsEvents.Web.Infrastructure
 
         public Task<long> CountAsync()
         {
-            return DbContext.Set<Event>().LongCountAsync();
+            return DbContext.Set<T>().LongCountAsync();
+        }
+
+        public Task<List<T>> AllAsync()
+        {
+            return DbContext.Set<T>().ToListAsync();
+
         }
     }
 }

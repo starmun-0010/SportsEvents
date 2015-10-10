@@ -77,3 +77,39 @@ $(window).scroll(function () {
     }
 });
 
+var addClass = function (el, className) {
+    if (el.classList) {
+        el.classList.add(className);
+    } else {
+        el.className += ' ' + className;
+    }
+},
+    hasClass = function (el, className) {
+        return el.classList ?
+            el.classList.contains(className) :
+            new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+    },
+    removeClass = function (el, className) {
+        if (el.classList) {
+            el.classList.remove(className);
+        } else {
+            el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        }
+    },
+    updateSelectPlaceholderClass = function (el) {
+        var opt = el.options[el.selectedIndex];
+        if (hasClass(opt, "placeholder")) {
+            addClass(el, "placeholder");
+        } else {
+            removeClass(el, "placeholder");
+        }
+    },
+    selectList = document.querySelectorAll("select");
+//Simulate placeholder text for Select box
+for (var i = 0; i < selectList.length; i++) {
+    var el = selectList[i];
+    updateSelectPlaceholderClass(el);
+    el.addEventListener("change", function () {
+        updateSelectPlaceholderClass(this);
+    });
+}
