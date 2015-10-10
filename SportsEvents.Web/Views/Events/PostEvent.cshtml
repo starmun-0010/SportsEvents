@@ -4,17 +4,151 @@
     ViewBag.Title = "title";
 }
 
-<h2>title</h2>
+<h2>Post A New Event</h2>
 <div>
     @using (Html.BeginForm("PostEvent", "Events", FormMethod.Post, new { @class = "form-horizontal" }))
     {
         @Html.AntiForgeryToken()
-        <h4>Post a new Event</h4>
+
         <hr />
-        <div class="input-group">
-            <div class="input-group">
-                
+        <div class="form-group">
+            <div class="col-md-5">
+                @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
             </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5">
+                @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+                <div>
+                    @Html.DropDownListFor(m => m.SportId, new SelectList(Model.Sports, "Id", "Name"), "--- Select Sport ---", new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5">
+                @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+                <div>
+                    @Html.DropDownListFor(m => m.EventTypeId, new SelectList(Model.EventTypes, "Id", "Name"), "--- Select Event Type ---", new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5">
+                @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+                <div>
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5">
+                @Html.LabelFor(m => m.Price, new { @class = "control-label" })
+                <div>
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5">
+                @Html.LabelFor(m => m.BeginDate, new { @class = "control-label", })
+                <div>
+                    @Html.TextBoxFor(m => m.BeginDate, new { @class = "form-control", type = "date", value = DateTime.Now })
+                </div>
+                @Html.ValidationMessageFor(m => m.BeginDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.EndDate, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.BeginTime, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.BeginTime, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.BeginTime, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.EndTime, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.EndTime, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.AddressLineOne, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.AddressLineOne, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.AddressLineTwo, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.AddressLineTwo, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.Zip, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.Zip, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Zip, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.Icon, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.Icon, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Icon, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.Pictures, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.Pictures, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Pictures, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.Pictures, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.Pictures, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.Pictures, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.VideoLink, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.VideoLink, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.VideoLink, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.SocialMediaLink, new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.SocialMediaLink, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.SocialMediaLink, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-5">
+            @Html.LabelFor(m => m.IsReoccuring, new { @class = "control-label" })
+            <div>
+                @Html.CheckBoxFor(m => m.IsReoccuring, new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(m => m.IsReoccuring, "", new { @class = "text-danger" })
         </div>
     }
 </div>

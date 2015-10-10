@@ -1,9 +1,6 @@
 ﻿@using SportsEvents.Web.Models
 @model List<SportsEvents.Web.Models.City>
-<div id="city" class="form-group col-md-12">
-    @Html.Label("City", new { @class = "control-label" })
-    <div>
-        @Html.DropDownList("CityId", new SelectList(Model, "Id", "Name"), "---Selecy City ---", new { @class = "form-control" })
-    </div>
-    @Html.ValidationMessage("CityId", "", new { @class = "text-danger" })
-</div>
+@foreach (var city in Model)
+{
+    <option value="@city.Id">@city.Name</option>
+}

@@ -1,4 +1,5 @@
-﻿using SportsEvents.Web.Models;
+﻿using System.Web.WebSockets;
+using SportsEvents.Web.Models;
 using SportsEvents.Web.Repository;
 
 namespace SportsEvents.Web.Infrastructure
@@ -12,10 +13,14 @@ namespace SportsEvents.Web.Infrastructure
             Countries = new EFRpository<Country>(dbContext);
             Advertisements = new EFRpository<Advertisement>(dbContext);
             Cities = new EFRpository<City>(dbContext);
+            EventTypes = new EFRpository<EventType>(dbContext);
+            Sports = new EFRpository<Sport>(dbContext);
         }
         public IRepository<Event> Events { get; set; }
         public IRepository<Advertisement> Advertisements { get; set; }
         public IRepository<Country> Countries { get; set; }
         public IRepository<City> Cities { get; set; }
+        public IRepository<EventType> EventTypes { get; set; }
+        public IRepository<Sport> Sports { get; set; }
     }
 }

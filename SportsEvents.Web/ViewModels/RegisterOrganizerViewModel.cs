@@ -40,20 +40,23 @@ namespace SportsEvents.Web.ViewModels
         public string LineTwo { get; set; }
 
         [Display(Name = "City")]
-        public int CityId { get; set; }
+        public int? CityId { get; set; }
         [Display(Name = "Country")]
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         public List<City> Cities { get; set; }
         //Contact  Address
         [Required]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Contact Name can only have alphabets and spaces.")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Contact Name can only have alphabets.")]
         [MaxLength(50, ErrorMessage = "Maximum 50 Characters Allowed")]
         [MinLength(3, ErrorMessage = "Minimum 3 characters required.")]
 
         [Display(Name = "First Name*")]
         public string ContactFirstName { get; set; }
         [Display(Name = "Last Name*")]
+        [Required]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Contact Name can only have alphabets.")]
+        [MaxLength(50, ErrorMessage = "Maximum 50 Characters Allowed")]
         [MinLength(3, ErrorMessage = "Minimum 3 characters required.")]
 
         public string ContactLastName { get; set; }
@@ -79,7 +82,7 @@ namespace SportsEvents.Web.ViewModels
         [Display(Name = "City*")]
         public int ContactCityId { get; set; }
         [Required]
-        [Display(Name = "State")]
+        [Display(Name = "State*")]
         public string ContactState { get; set; }
         [Display(Name = "State")]
         public string State { get; set; }
@@ -89,17 +92,18 @@ namespace SportsEvents.Web.ViewModels
         public string ConatactEmail { get; set; }
 
         [Display(Name = "Zip")]
-        [RegularExpression(@"^\d{5}(?:[-\s]\d{4})?$",ErrorMessage = "Invalid zip code.")]
-        public int Zip { get; set; }
-        
-        [Required]
-        [Display(Name = "Zip")]
         [RegularExpression(@"^\d{5}(?:[-\s]\d{4})?$", ErrorMessage = "Invalid zip code.")]
-        public int ContactZip { get; set; }
-        [RegularExpression(@"\d*", ErrorMessage = "Invalid phone number.")]
+        public string Zip { get; set; }
+
+        [Required]
+        [Display(Name = "Zip*")]
+        [RegularExpression(@"^\d{5}(?:[-\s]\d{4})?$", ErrorMessage = "Invalid zip code.")]
+        public string ContactZip { get; set; }
+        [Phone]
         [Display(Name = "Phone Number")]
         public string Phone { get; set; }
-        [RegularExpression(@"\d*",ErrorMessage = "Invalid phone number.")]
+        [Phone]
+        [Required]
         [Display(Name = "Phone Number")]
         public string ContactPhone { get; set; }
         [Required]

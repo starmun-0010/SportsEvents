@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
 using System.Linq;
@@ -9,10 +11,12 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using SportsEvents.Web.Models;
 using SportsEvents.Web.Repository;
+using SportsEvents.Web.ViewModels;
 using SportsEvents.Web.ViewModels.EventViewModels;
 using ControllerBase = SportsEvents.Web.Infrastructure.ControllerBase;
 namespace SportsEvents.Web.Controllers
 {
+    [Authorize]
     public class EventsController : ControllerBase
     {
 
@@ -160,7 +164,17 @@ namespace SportsEvents.Web.Controllers
 
         public ActionResult PostEvent()
         {
-            return View();
+            var model = new PostEventViewModel();
+            var eventTypesTask = Repository.EventTypes.AllAsync();
+            var sportsTask = Repository.Sports.AllAsync();
+            var countriesTask = Repository.Countries.AllAsync();
+            Task.WaitAll(eventTypesTask, sportsTask, countriesTask);
+            model.EventTypes = eventTypesTask.Result;
+            model.Sports = sportsTask.Result;
+            model.Countries = countriesTask.Result;
+            model.Cities = new List<City>();
+            model.BeginDate = DateTime.Now;
+            return View(model);
         }
     }
 }
