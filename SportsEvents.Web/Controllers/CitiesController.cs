@@ -15,7 +15,7 @@ namespace SportsEvents.Web.Controllers
         public ActionResult GetCities(int countryId)
         {
             var cities = Repository.Cities.Where(e => e.CountryId == countryId).ToListAsync().Result;
-            return View(cities);
+            return PartialView(cities);
         }
     }
 }

@@ -226,6 +226,7 @@
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="ViewModels\OrganizerControlPanelViewModel.cs" />
     <Compile Include="ViewModels\OrganizerRegisterViewModel.cs" />
+    <Compile Include="ViewModels\PostEventViewModel.cs" />
     <Compile Include="ViewModels\RegisterOrganizerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

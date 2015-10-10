@@ -1,7 +1,20 @@
-﻿@model dynamic
+﻿@model SportsEvents.Web.ViewModels.PostEventViewModel
 
 @{
     ViewBag.Title = "title";
 }
 
 <h2>title</h2>
+<div>
+    @using (Html.BeginForm("PostEvent", "Events", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        <h4>Post a new Event</h4>
+        <hr />
+        <div class="input-group">
+            <div class="input-group">
+                
+            </div>
+        </div>
+    }
+</div>

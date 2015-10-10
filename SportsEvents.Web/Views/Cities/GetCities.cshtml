@@ -1,5 +1,9 @@
-﻿@model List<SportsEvents.Web.Models.City>
-<div id="city" class="col-md-8">
-
-    @Html.DropDownList("CityId", new SelectList(Model, "Id", "Name"), new { @class = "form-control" })
+﻿@using SportsEvents.Web.Models
+@model List<SportsEvents.Web.Models.City>
+<div id="city" class="form-group col-md-12">
+    @Html.Label("City", new { @class = "control-label" })
+    <div>
+        @Html.DropDownList("CityId", new SelectList(Model, "Id", "Name"), "---Selecy City ---", new { @class = "form-control" })
+    </div>
+    @Html.ValidationMessage("CityId", "", new { @class = "text-danger" })
 </div>
