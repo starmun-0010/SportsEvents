@@ -14,6 +14,12 @@ namespace SportsEvents.Web.Controllers
     public class HomeController : ControllerBase
 
     {
+        public ActionResult Featured()
+        {
+            var model = Repository.Events.Where(e => e.IsFeatured).ToListAsync().Result;
+            return PartialView(model);
+        }
+
         public async Task<ActionResult> Index()
         {
             return View();

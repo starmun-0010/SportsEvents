@@ -320,6 +320,7 @@
     <None Include="Views\Events\Search.cshtml" />
     <Content Include="Views\Home\Events.cshtml" />
     <Content Include="Views\Home\Adds.cshtml" />
+    <None Include="Views\Home\Featured.cshtml" />
     <None Include="Views\Organizer\ControlPanel.cshtml" />
   </ItemGroup>
   <ItemGroup>

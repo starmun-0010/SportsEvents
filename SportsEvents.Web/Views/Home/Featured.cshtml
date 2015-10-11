@@ -1,0 +1,31 @@
+﻿@model List<SportsEvents.Web.Models.Event>
+<ul class="list-inline featured">
+    @foreach (var _event in Model)
+    {
+        <li>
+
+            <a href="@_event.ExternalLink">
+                <img height="200" width="200" src="@_event.IconLink" />
+            </a>
+            <a href="@_event.ExternalLink">
+                <h5 class="description">
+                    @if (@_event.Description.Length >= 20)
+                    {
+                        @_event.Description.Substring(0, 20) @:...
+                    }
+                    else
+                    {
+                        @_event.Description
+                    }
+                </h5>
+            </a>
+            @*<div class="row sport">
+                <a class="col-sm-12 col-lg-12">@_event.SportName</a>
+            </div>
+
+            <div class="row event-type">
+                <a class="col-sm-12 col-lg-12">@_event.EventTypeName</a>
+            </div>*@
+        </li>
+    }
+</ul>

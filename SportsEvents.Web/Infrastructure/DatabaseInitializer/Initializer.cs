@@ -50,13 +50,14 @@ namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
                 }
                 for (int i = 0; i < 30; i++)
                 {
-                    var organizer = new ApplicationUser()
+                    var user = new ApplicationUser()
                     {
                         UserName = Ipsum.GetWord(),
                         Email = Ipsum.GetWord() + "@" + Ipsum.GetWord() + ".com",
                         Address = new Address()
                     };
-                    usermanager.Create(organizer);
+
+                    usermanager.Create(user);
                 }
                 context.Advertisements.AddRange(advertisements);
                 var organizers = context.Users.ToList();
@@ -72,20 +73,20 @@ namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
                     for (var j = 0; j < 20; j++)
                     {
                         var pictures = new List<Picture>();
-                        for (int k = 0; k < rand.Next(5); k++)
+                        for (int k = 0; k < rand.Next(1,5); k++)
                         {
                             pictures.Add(new Picture() { Url = "https://placehold.it/1000x800?text=" + Ipsum.GetWord() });
                         }
 
-                        var description = Ipsum.GetPhrase(rand.Next(10));
+                        var description = Ipsum.GetPhrase(rand.Next(1,10));
                         var beginDate = DateTime.Now.Date + TimeSpan.FromDays(rand.Next(1, 15));
                         var detail = Ipsum.GetPhrase(rand.Next(40, 200));
                         var endDate = beginDate + TimeSpan.FromDays(rand.Next(1, 15));
                         var organizer = organizers[rand.Next(organizers.Count)];
                         var address = new Address
                         {
-                            LineOne = Ipsum.GetPhrase(rand.Next(10)),
-                            LineTwo = Ipsum.GetPhrase(rand.Next(10))
+                            LineOne = Ipsum.GetPhrase(rand.Next(1,10)),
+                            LineTwo = Ipsum.GetPhrase(rand.Next(1,10))
                         };
                         if (!String.IsNullOrEmpty(description))
                         {
@@ -115,7 +116,8 @@ namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
                             EventTypeName = eventType.Name,
                             Organizer = organizer,
                             City = cities[rand.Next(cities.Count)],
-                            OrganizerName = organizer.UserName
+                            OrganizerName = organizer.UserName,
+                            IsFeatured = rand.Next(2) == 1,
 
                         };
                         events.Add(@event);

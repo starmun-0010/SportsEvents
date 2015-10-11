@@ -17,7 +17,17 @@
 
 #events {
 }
-
+.list-inline {
+   width: 100%;
+    display: block;
+    white-space: nowrap;
+   
+     overflow: auto; 
+}
+.list-inline>li {
+    
+     display: inline-block;
+}
 .add {
     margin-bottom: 5px;
 }

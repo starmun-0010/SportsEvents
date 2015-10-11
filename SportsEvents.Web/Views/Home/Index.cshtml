@@ -3,8 +3,10 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <img class="banner" src="https://placehold.it/900x200?text=banner" />
+<div>
+    @{
+        Html.RenderAction("Featured");
+    }
 </div>
 <div class="row content">
     <section class="col-lg-7 col-md-10 col-lg-push-1 partial-contents-events" id="events" data-url="@Url.Action("Events")">
@@ -18,5 +20,5 @@
     <section class="col-lg-2 col-md-2 hidden-sm hidden-xs col-lg-push-2 partial-contents-adds" data-url="@Url.Action("Adds")">
         <div id="advertiements"></div>
     </section>
-
+    <div></div>
 </div>
