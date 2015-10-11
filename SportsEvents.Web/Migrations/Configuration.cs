@@ -55,13 +55,14 @@ namespace SportsEvents.Web.Migrations
                 }
                 for (int i = 0; i < 30; i++)
                 {
-                    var organizer = new ApplicationUser()
+                    var user = new ApplicationUser()
                     {
                         UserName = Ipsum.GetWord(),
                         Email = Ipsum.GetWord() + "@" + Ipsum.GetWord() + ".com",
                         Address = new Address()
                     };
-                    usermanager.Create(organizer);
+                        
+                    usermanager.Create(user);
                 }
                 context.Advertisements.AddRange(advertisements);
                 var organizers = context.Users.ToList();

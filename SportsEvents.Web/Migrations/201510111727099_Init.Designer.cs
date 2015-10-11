@@ -13,7 +13,7 @@ namespace SportsEvents.Web.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201510092009558_Init"; }
+            get { return "201510111727099_Init"; }
         }
         
         string IMigrationMetadata.Source

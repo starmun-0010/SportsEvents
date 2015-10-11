@@ -15,6 +15,7 @@ namespace SportsEvents.Web.Infrastructure
             Cities = new EFRpository<City>(dbContext);
             EventTypes = new EFRpository<EventType>(dbContext);
             Sports = new EFRpository<Sport>(dbContext);
+            ContactDetails = new EFRpository<ContactDetails>(dbContext);
         }
         public IRepository<Event> Events { get; set; }
         public IRepository<Advertisement> Advertisements { get; set; }
@@ -22,5 +23,6 @@ namespace SportsEvents.Web.Infrastructure
         public IRepository<City> Cities { get; set; }
         public IRepository<EventType> EventTypes { get; set; }
         public IRepository<Sport> Sports { get; set; }
+        public IRepository<ContactDetails> ContactDetails { get; set; }
     }
 }

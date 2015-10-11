@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,7 +12,8 @@ namespace SportsEvents.Web.Models
     {
         [System.ComponentModel.DataAnnotations.Url]
         public string Link { get; set; }
-        public string ContactName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public Address Address { get; set; }
         public string OrganiztionName { get; set; }
         public string OrganizationDecription { get; set; }
@@ -21,6 +23,8 @@ namespace SportsEvents.Web.Models
         public ICollection<Event> BookmarkedEvents { get; set; }
         public ICollection<Event> RegisteredEvents { get; set; }
         public ICollection<Event> RegisterRequestEvents { get; set; }
+
+        public string ContactDetailsId { get; set; }
         public ContactDetails ContactDetails { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -30,13 +34,5 @@ namespace SportsEvents.Web.Models
             // Add custom user claims here
             return userIdentity;
         }
-    }
-
-    public class ContactDetails
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public Address Address { get; set; }
     }
 }

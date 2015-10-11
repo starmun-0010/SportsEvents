@@ -1,0 +1,12 @@
+﻿.horizontal-group > .form-group{
+    margin-right: 5px;
+    
+}
+.radios>label > input[type=radio]{
+
+    width: 17px;
+    height: 17px;
+}
+.radios>label {
+    font-size: 17px;
+}

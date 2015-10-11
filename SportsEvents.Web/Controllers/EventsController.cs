@@ -6,6 +6,7 @@ using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -164,6 +165,10 @@ namespace SportsEvents.Web.Controllers
 
         public ActionResult PostEvent()
         {
+            if (!((ClaimsIdentity)User.Identity).HasClaim("IsOrganizer", "true"))
+            {
+                return RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
+            }
             var model = new PostEventViewModel();
             var eventTypesTask = Repository.EventTypes.AllAsync();
             var sportsTask = Repository.Sports.AllAsync();
@@ -174,6 +179,42 @@ namespace SportsEvents.Web.Controllers
             model.Countries = countriesTask.Result;
             model.Cities = new List<City>();
             model.BeginDate = DateTime.Now;
+            model.EndDate = DateTime.Now;
+            model.BeginTime = DateTime.Now;
+            model.EndTime = DateTime.Now;
+
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PostEvent(PostEventViewModel model)
+        {
+
+            if (!((ClaimsIdentity)User.Identity).HasClaim("IsOrganizer", "true"))
+            {
+                return RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
+            }
+            if (ModelState.IsValid)
+            {
+                var @event = new Event()
+                {
+                    OrganizerId = User.Identity.GetUserId(),
+
+
+                };
+                Repository.Events.AddAsync(@event);
+                return RedirectToAction("ControlPanel", "Organizer");
+            }
+            var eventTypesTask = Repository.EventTypes.AllAsync();
+            var sportsTask = Repository.Sports.AllAsync();
+            var countriesTask = Repository.Countries.AllAsync();
+            var cityTask = Repository.Cities.AllAsync();
+            Task.WaitAll(eventTypesTask, sportsTask, countriesTask, cityTask);
+            model.EventTypes = eventTypesTask.Result;
+            model.Sports = sportsTask.Result;
+            model.Countries = countriesTask.Result;
+
+            model.Cities = cityTask.Result;
             return View(model);
         }
     }

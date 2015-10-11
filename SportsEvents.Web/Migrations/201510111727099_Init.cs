@@ -42,6 +42,9 @@ namespace SportsEvents.Web.Migrations
                         Address_LineTwo = c.String(),
                         Address_CityName = c.String(),
                         Address_CountryName = c.String(),
+                        Address_CityId = c.Int(nullable: false),
+                        Address_Zip = c.String(),
+                        Address_State = c.String(),
                         Description = c.String(),
                         Details = c.String(),
                         IconLink = c.String(),
@@ -73,14 +76,19 @@ namespace SportsEvents.Web.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         Link = c.String(),
-                        ContactName = c.String(),
+                        FirstName = c.String(),
+                        LastName = c.String(),
                         Address_LineOne = c.String(),
                         Address_LineTwo = c.String(),
                         Address_CityName = c.String(),
                         Address_CountryName = c.String(),
+                        Address_CityId = c.Int(nullable: false),
+                        Address_Zip = c.String(),
+                        Address_State = c.String(),
                         OrganiztionName = c.String(),
                         OrganizationDecription = c.String(),
                         OrganaiztionLogo = c.Binary(),
+                        ContactDetailsId = c.String(maxLength: 128),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
@@ -92,12 +100,11 @@ namespace SportsEvents.Web.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
-                        ContactDetails_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.ContactDetails", t => t.ContactDetails_Id)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex")
-                .Index(t => t.ContactDetails_Id);
+                .ForeignKey("dbo.ContactDetails", t => t.ContactDetailsId)
+                .Index(t => t.ContactDetailsId)
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -116,13 +123,18 @@ namespace SportsEvents.Web.Migrations
                 "dbo.ContactDetails",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
+                        Id = c.String(nullable: false, maxLength: 128),
+                        FirstName = c.String(),
+                        LastName = c.String(),
                         Email = c.String(),
                         Address_LineOne = c.String(),
                         Address_LineTwo = c.String(),
                         Address_CityName = c.String(),
                         Address_CountryName = c.String(),
+                        Address_CityId = c.Int(nullable: false),
+                        Address_Zip = c.String(),
+                        Address_State = c.String(),
+                        Phone = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -284,7 +296,7 @@ namespace SportsEvents.Web.Migrations
             DropForeignKey("dbo.Messages", "ReceiverId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Events", "OrganizerId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUsers", "ContactDetails_Id", "dbo.ContactDetails");
+            DropForeignKey("dbo.AspNetUsers", "ContactDetailsId", "dbo.ContactDetails");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.RegisterRequestEventVisitors", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.RegisterRequestEventVisitors", new[] { "Event_Id" });
@@ -302,8 +314,8 @@ namespace SportsEvents.Web.Migrations
             DropIndex("dbo.Messages", new[] { "SenderId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", new[] { "ContactDetails_Id" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.AspNetUsers", new[] { "ContactDetailsId" });
             DropIndex("dbo.Events", new[] { "OrganizerId" });
             DropIndex("dbo.Events", new[] { "EventTypeId" });
             DropIndex("dbo.Events", new[] { "SportId" });

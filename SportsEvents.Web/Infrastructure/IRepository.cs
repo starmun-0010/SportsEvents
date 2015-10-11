@@ -14,5 +14,9 @@ namespace SportsEvents.Web.Infrastructure
         Task<long> CountAsync();
 
         Task<List<T>> AllAsync();
+        Task<T> GetAsync(int id);
+        Task<int> AddAsync(T entity);
+        Task<T> GetAsync<TK>(TK contactDetailsId);
+        Task<int> Update(T entity);
     }
 }

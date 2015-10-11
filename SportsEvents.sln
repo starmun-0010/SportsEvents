@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsEvents.Web.Tests", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsEvents.Entities", "SportsEvents.Entities\SportsEvents.Entities.csproj", "{029D949B-F42F-4F37-AA22-5B9DE5506C1D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queries", "Queries", "{E8909678-30C7-43D8-A80E-FFD9D6F31D65}"
+	ProjectSection(SolutionItems) = preProject
+		DELTE.sql = DELTE.sql
+		SQLQuery4.sql = SQLQuery4.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

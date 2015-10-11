@@ -49,8 +49,8 @@ namespace SportsEvents.Web.ViewModels
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
+        [Display(Name = "Email / User Name")]
+       
         public string Email { get; set; }
 
         [Required]

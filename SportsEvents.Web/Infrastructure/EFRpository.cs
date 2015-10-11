@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -30,20 +31,47 @@ namespace SportsEvents.Web.Infrastructure
             return DbContext.Set<T>().Where(predicate);
         }
 
-        public Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
         {
-            return DbContext.Set<T>().CountAsync(predicate);
+            return await DbContext.Set<T>().CountAsync(predicate);
         }
 
-        public Task<long> CountAsync()
+        public async Task<long> CountAsync()
         {
-            return DbContext.Set<T>().LongCountAsync();
+            return await DbContext.Set<T>().LongCountAsync();
         }
 
-        public Task<List<T>> AllAsync()
+        public async Task<List<T>> AllAsync()
         {
-            return DbContext.Set<T>().ToListAsync();
+            return await DbContext.Set<T>().ToListAsync();
 
+        }
+
+        public async Task<T> GetAsync(int id)
+        {
+            return await DbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<int> AddAsync(T entity)
+        {
+            DbContext.Set<T>().Add(entity);
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<T> GetAsync<TK>(TK id)
+        {
+            return await DbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<int> Update(T entity)
+        {
+            DbEntityEntry entry = DbContextSingelton.Entry(entity);
+            DbContextSingelton.Set<T>().Attach(entity);
+
+            entry.State = EntityState.Modified;
+
+
+            return await DbContextSingelton.SaveChangesAsync();
         }
     }
 }

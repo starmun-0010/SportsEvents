@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using SportsEvents.Web.CustomAttirbutes;
 using SportsEvents.Web.Models;
 using SportsEvents.Web.ViewModels;
 using ControllerBase = SportsEvents.Web.Infrastructure.ControllerBase;
@@ -36,26 +36,14 @@ namespace SportsEvents.Web.Controllers
 
         public ApplicationSignInManager SignInManager
         {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
+            get { return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
+            private set { _signInManager = value; }
         }
-
+        
         public ApplicationUserManager UserManager
         {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
+            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
+            private set { _userManager = value; }
         }
 
         //
@@ -81,7 +69,7 @@ namespace SportsEvents.Web.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -89,7 +77,7 @@ namespace SportsEvents.Web.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -126,7 +114,10 @@ namespace SportsEvents.Web.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result =
+                await
+                    SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe,
+                        model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -144,7 +135,6 @@ namespace SportsEvents.Web.Controllers
         // GET: /Account/Register
         [AllowAnonymous]
         [Route("Account/Register")]
-
         public ActionResult Register()
         {
             return View();
@@ -158,7 +148,6 @@ namespace SportsEvents.Web.Controllers
         [Route("Account/Register/{role}", Name = "Register")]
         public async Task<ActionResult> Register(string role, RegisterViewModel model)
         {
-
             if (role != "Organizer" && role != "Vsitor")
             {
                 return HttpNotFound();
@@ -170,7 +159,7 @@ namespace SportsEvents.Web.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    await SignInManager.SignInAsync(user, false, false);
 
                     // For more inf
                     // Send an email with this link
@@ -181,14 +170,10 @@ namespace SportsEvents.Web.Controllers
 
                     if (role == "Organizer")
                     {
-
-                        return RedirectToAction("OrganizerInformation", "Account", routeValues: new { name = User.Identity.Name });
-
-
+                        return RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
                     }
                 }
                 AddErrors(result);
-
             }
 
             // If we got this far, something failed, redisplay form
@@ -199,24 +184,186 @@ namespace SportsEvents.Web.Controllers
         {
             if (name != User.Identity.Name)
             {
-                RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
+                return RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
             }
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            ContactDetails contactDetails = null;
+            if (!string.IsNullOrEmpty(user.ContactDetailsId))
+            {
+                contactDetails =
+                       await Repository.ContactDetails.GetAsync(user.ContactDetailsId);
+            }
+            City city = null;
+            List<City> cities = new List<City>();
+            City contactCity = null;
+            List<City> contactCities = new List<City>();
             var countries = await Repository.Countries.AllAsync();
+            if (user.Address.CityId != 0)
+            {
+                city = await Repository.Cities.GetAsync(user.Address.CityId);
+                cities = await Repository.Cities.Where(e => e.CountryId == city.CountryId).ToListAsync();
 
-            var model = new RegisterOrganizerViewModel() { Countries = countries, Cities = new List<City>() };
+            }
+
+            if (contactDetails != null && contactDetails.Address.CityId != 0)
+            {
+
+                contactCity = await Repository.Cities.GetAsync(contactDetails.Address.CityId);
+                contactCities = await Repository.Cities.Where(e => e.CountryId == contactCity.CountryId).ToListAsync();
+
+            }
+
+            var model = new RegisterOrganizerViewModel
+            {
+                Countries = countries,
+                Cities = cities,
+
+
+                ContactCities = contactCities,
+                ConatactEmail = contactDetails?.Email,
+                ContactFirstName = contactDetails?.FirstName,
+                ContactLastName = contactDetails?.LastName,
+                ContactState = contactDetails?.Address.State,
+                ContactZip = contactDetails?.Address.Zip,
+                ContactLineOne = contactDetails?.Address.LineOne,
+                ContactLineTwo = contactDetails?.Address.LineTwo,
+                ContactPhone = contactDetails?.Phone,
+
+
+                CityId = city?.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                LineOne = user.Address.LineOne,
+                LineTwo = user.Address.LineTwo,
+                Link = user.Link,
+                Phone = user.PhoneNumber,
+                State = user.Address.State,
+                Zip = user.Address.Zip,
+
+                OrganizationDecription = user.OrganizationDecription,
+                OrganizationName = user.OrganiztionName
+
+            };
+            if (contactDetails != null && contactDetails.Address.CityId != 0) model.ContactCityId = contactDetails.Address.CityId;
+
+
+            if (contactCity != null) model.ContactCountryId = contactCity.CountryId;
+            model.CountryId = city?.CountryId;
+
+
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganizerInformation(string name, RegisterOrganizerViewModel model)
+
         {
             if (name != User.Identity.Name)
             {
                 RedirectToAction("Login");
             }
+            IdentityResult result = null;
             if (ModelState.IsValid)
             {
+                City city = null;
+                var contactCity = await Repository.Cities.GetAsync(model.ContactCityId);
+
+                var user = await UserManager.FindByNameAsync(User.Identity.Name);
+                ContactDetails contactDetails = null;
+                if (!String.IsNullOrEmpty(user.ContactDetailsId))
+                {
+                    contactDetails =
+                           await Repository.ContactDetails.GetAsync(user.ContactDetailsId);
+                }
+                if (model.CityId != null)
+                {
+                    city = await Repository.Cities.GetAsync(model.CityId.Value);
+                }
+
+                using (var inputStream = model.OrganaiztionLogo?.InputStream)
+                {
+                    var memoryStream = inputStream as MemoryStream;
+                    if (memoryStream == null)
+                    {
+                        memoryStream = new MemoryStream();
+                        inputStream?.CopyTo(memoryStream);
+                    }
+                    user.OrganaiztionLogo = memoryStream.ToArray();
+                }
+                user.OrganiztionName = model.OrganizationName;
+                user.OrganizationDecription = model.OrganizationDecription;
+
+                user.Address = new Address
+                {
+                    LineOne = model.LineOne,
+                    LineTwo = model.LineTwo,
+                    CityId = city?.Id ?? 0,
+                    CityName = city?.Name,
+                    Zip = model.Zip,
+                    State = model.State,
+                    CountryName = city?.CountryName
+                };
+                user.Link = model.Link;
+
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.PhoneNumber = model.Phone;
+
+                if (contactDetails == null)
+                {
+                    user.ContactDetails = new ContactDetails
+                    {
+                        Id = user.Id,
+                        Address =
+                            new Address
+                            {
+                                CityId = model.ContactCityId,
+                                CityName = contactCity.Name,
+                                CountryName = contactCity.CountryName,
+                                LineOne = model.ContactLineOne,
+                                LineTwo = model.ContactLineTwo,
+                                State = model.ContactState,
+                                Zip = model.ContactZip
+                            },
+                        Email = model.ConatactEmail,
+                        FirstName = model.ContactFirstName,
+                        LastName = model.ContactLastName,
+                        Phone = model.ContactPhone,
+                        
+                    };
+                }
+                else
+                {
+                    contactDetails.Address.CityId = contactCity.Id;
+                    contactDetails.Address.CityName = contactCity.Name;
+                    contactDetails.Address.CountryName = contactCity.CountryName;
+                    contactDetails.Address.LineOne = model.ContactLineOne;
+                    contactDetails.Address.LineTwo = model.ContactLineTwo;
+                    
+                    contactDetails.Address.Zip = model.ContactZip;
+                    contactDetails.Address.State = model.ContactState;
+                    contactDetails.Email = model.ConatactEmail;
+                    contactDetails.FirstName = model.ContactFirstName;
+                    contactDetails.LastName = model.ContactLastName;
+                    contactDetails.Phone = model.ContactPhone;
+                    Debug.Write(await Repository.ContactDetails.Update(contactDetails));
+
+                }
+
+
+
+                user.Claims.Add(new IdentityUserClaim() { ClaimType = "IsOrganizer", ClaimValue = "true" });
+
+
+
+
+
+                result = await UserManager.UpdateAsync(user);
+
+
+
+                AddErrors(result);
 
                 return RedirectToAction("PostEvent", "Events");
             }
@@ -225,8 +372,8 @@ namespace SportsEvents.Web.Controllers
             model.Countries = countries;
             model.Cities = cities;
             return View(model);
-
         }
+
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -334,7 +481,8 @@ namespace SportsEvents.Web.Controllers
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider
-            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+            return new ChallengeResult(provider,
+                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
         //
@@ -348,8 +496,10 @@ namespace SportsEvents.Web.Controllers
                 return View("Error");
             }
             var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-            var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            var factorOptions =
+                userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
+            return
+                View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
         //
@@ -369,7 +519,8 @@ namespace SportsEvents.Web.Controllers
             {
                 return View("Error");
             }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            return RedirectToAction("VerifyCode",
+                new { Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe });
         }
 
         //
@@ -384,7 +535,7 @@ namespace SportsEvents.Web.Controllers
             }
 
             // Sign in the user with this external login provider if the user already has a login
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+            var result = await SignInManager.ExternalSignInAsync(loginInfo, false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -398,7 +549,8 @@ namespace SportsEvents.Web.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    return View("ExternalLoginConfirmation",
+                        new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
         }
 
@@ -407,7 +559,8 @@ namespace SportsEvents.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,
+            string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -429,7 +582,7 @@ namespace SportsEvents.Web.Controllers
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        await SignInManager.SignInAsync(user, false, false);
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -479,15 +632,13 @@ namespace SportsEvents.Web.Controllers
         }
 
         #region Helpers
+
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager
         {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
+            get { return HttpContext.GetOwinContext().Authentication; }
         }
 
         private void AddErrors(IdentityResult result)
@@ -535,6 +686,7 @@ namespace SportsEvents.Web.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+
         #endregion
     }
 }

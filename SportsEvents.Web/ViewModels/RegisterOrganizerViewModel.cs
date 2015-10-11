@@ -45,6 +45,7 @@ namespace SportsEvents.Web.ViewModels
         public int? CountryId { get; set; }
 
         public List<City> Cities { get; set; }
+        public List<City> ContactCities { get; set; }
         //Contact  Address
         [Required]
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Contact Name can only have alphabets.")]
@@ -73,18 +74,19 @@ namespace SportsEvents.Web.ViewModels
         [MaxLength(120, ErrorMessage = "Maximum 120 Characters Allowed")]
         public string ContactLineTwo { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Country is required")]
         [Display(Name = "Country*")]
 
         public int ContactCountryId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "City is required")]
         [Display(Name = "City*")]
         public int ContactCityId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "State is required")]
         [Display(Name = "State*")]
         public string ContactState { get; set; }
         [Display(Name = "State")]
+        
         public string State { get; set; }
         [Required]
         [EmailAddress]

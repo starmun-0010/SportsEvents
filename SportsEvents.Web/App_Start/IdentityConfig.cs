@@ -41,7 +41,7 @@ namespace SportsEvents.Web
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<SportsEventsDbContext>()));
             // Configure validation logic for usernames
@@ -59,7 +59,7 @@ namespace SportsEvents.Web
                 RequireDigit = false,
                 RequireLowercase = true,
                 RequireUppercase = false,
-                
+
             };
 
             // Configure user lockout defaults
@@ -83,7 +83,7 @@ namespace SportsEvents.Web
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
@@ -96,6 +96,22 @@ namespace SportsEvents.Web
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)
         {
+        }
+
+        public async override Task<SignInStatus> PasswordSignInAsync(string email, string password, bool isPersistent, bool shouldLockout)
+        {
+            try
+            {
+                var userName = (await UserManager.FindByEmailAsync(email)).UserName;
+                return await base.PasswordSignInAsync(userName, password, isPersistent, shouldLockout);
+
+            }
+            catch (Exception)
+            {
+
+                return await base.PasswordSignInAsync(email, password, isPersistent, shouldLockout);
+
+            }
         }
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)

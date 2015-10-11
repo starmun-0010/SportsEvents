@@ -189,6 +189,7 @@
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OrganizerController.cs" />
     <Compile Include="Controllers\PictureService.cs" />
     <Compile Include="Controllers\RootController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -202,14 +203,15 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\EFRpository.cs" />
     <Compile Include="Infrastructure\SportsEventsRepository.cs" />
-    <Compile Include="Migrations\201510092009558_Init.cs" />
-    <Compile Include="Migrations\201510092009558_Init.Designer.cs">
-      <DependentUpon>201510092009558_Init.cs</DependentUpon>
+    <Compile Include="Migrations\201510111727099_Init.cs" />
+    <Compile Include="Migrations\201510111727099_Init.Designer.cs">
+      <DependentUpon>201510111727099_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Advertisement.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\ContactDetails.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\Message.cs" />
@@ -235,6 +237,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Events.css" />
+    <Content Include="Content\PostEvent.css" />
     <Content Include="Content\signup.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -317,6 +320,7 @@
     <None Include="Views\Events\Search.cshtml" />
     <Content Include="Views\Home\Events.cshtml" />
     <Content Include="Views\Home\Adds.cshtml" />
+    <None Include="Views\Organizer\ControlPanel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -327,8 +331,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510092009558_Init.resx">
-      <DependentUpon>201510092009558_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510111727099_Init.resx">
+      <DependentUpon>201510111727099_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
