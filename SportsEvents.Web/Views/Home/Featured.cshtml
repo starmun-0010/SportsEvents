@@ -1,17 +1,31 @@
-﻿@model List<SportsEvents.Web.Models.Event>
+﻿@using System.Drawing
+@model List<SportsEvents.Web.Models.Event>
 <ul class="list-inline featured">
+    @{var rand = new Random();}
     @foreach (var _event in Model)
     {
         <li>
 
             <a href="@_event.ExternalLink">
-                <img height="200" width="200" src="@_event.IconLink" />
+                @{
+                    var source = string.Empty;
+                    if (_event.Icon?.Length > 0)
+                    {
+                        source = ViewBag.BaseUrl + "/Images/Thumbnail/" + _event.Id;
+                    }
+                    else
+                    {
+                        var color = Color.FromArgb(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+                        source = "http://placeskull.com/50/50/" + ColorTranslator.ToHtml(color).Substring(1) + "/" + rand.Next(1, 45);
+                    }}
+                <img height="200" width="200" src="@source"/>
             </a>
             <a href="@_event.ExternalLink">
                 <h5 class="description">
                     @if (@_event.Description.Length >= 20)
                     {
-                        @_event.Description.Substring(0, 20) @:...
+                        @_event.Description.Substring(0, 20)
+                        @:...
                     }
                     else
                     {

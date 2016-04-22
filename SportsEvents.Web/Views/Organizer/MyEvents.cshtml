@@ -1,0 +1,21 @@
+﻿
+@model System.Collections.Generic.List<SportsEvents.Web.ViewModels.MyEventsSummaryViewModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "../Shared/_OrganizerControlPanelLayout.cshtml";
+}
+
+<div class="container">
+    @foreach (var _event in Model)
+    {
+
+        <div class="row">
+            <a href="@Url.Action("EditEvent", "Organizer", new { id = _event.Id })">
+                <h5 class="col-lg-5 col-md-5">@_event.Title</h5>
+                <span class="col-md-1 col-lg-1 fa fa-eye">@_event.ClicksCount</span>
+                <span class="col-md-1 col-lg-1 fa fa-save">@_event.SavesCount</span>
+            </a>
+        </div>
+    }
+</div>

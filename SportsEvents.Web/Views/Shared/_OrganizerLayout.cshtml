@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+@using StackExchange.Profiling;
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Sports Events</title>
+    <script>
+        var baseUrl = '@Url.Content("~/")';
+    </script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse  navbar-fixed-top">
+        <div class="container">
+
+            <div class="navbar-header">
+                @Html.ActionLink("Sports Events", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+
+            </div><div class="nav navbar-nav row"></div>
+            <ul class="nav navbar-nav navbar-right">
+               
+               
+                
+                @{
+                    Html.RenderPartial("_LoginPartial");
+                }
+            </ul>
+        </div>
+
+
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="navbar-fixed-bottom container">
+            <p>&copy; @DateTime.Now.Year - Sports Events</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap") @Scripts.Render("~/bundles/app")
+
+    @MiniProfiler.RenderIncludes()
+
+
+    @RenderSection("scripts", false)
+
+
+
+</body>
+</html>

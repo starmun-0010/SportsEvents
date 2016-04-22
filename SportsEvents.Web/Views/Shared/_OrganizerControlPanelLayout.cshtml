@@ -1,0 +1,32 @@
+﻿@{ Layout = "_OrganizerLayout.cshtml";}
+<nav class="navbar navbar-default navbar-fixed-top controler-nav">
+    <div class="container">
+
+
+        <ul class="nav navbar-nav row  nav-bottom">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">Events<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a>My Events</a></li>
+                    <li><a>Registration Requsts</a></li>
+                    <li><a>Registered Events</a></li>
+                </ul>
+
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">Conversations<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a>Unread</a></li>
+                    <li><a>Inbox</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+
+</nav>
+<div class="container controler-nav body-content">
+    @RenderBody()
+    <hr />
+
+</div>

@@ -1,0 +1,32 @@
+﻿@model List<SportsEvents.Web.Controllers.RegistrationRequestsViewModel>
+
+@{
+    ViewBag.Title = "Registration Requests";
+    Layout = "~/Views/Shared/_OrganizerControlPanelLayout.cshtml";
+}
+
+<h2>Registration Requests</h2>
+<div class="container">
+    @foreach (var _event in Model)
+    {
+        <div class="row">
+
+            <span>@_event.Description</span>
+            <span class="fa fa-user">@_event.UserInfo.Count()</span>
+            <div>
+                @foreach (var userInfo in _event.UserInfo)
+                {
+                    <div class="row">
+                        <a href="@Url.Action("Details", "Account", new {id = userInfo.Id})"></a>
+                        <span>@userInfo.Name</span>
+                        @using (Html.BeginForm("AcceptRequest","Organizer",new {userId=userInfo.Id, eventId=_event.Id},FormMethod.Post))
+                        {
+                           <input type="submit" value="Accept"/>
+
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

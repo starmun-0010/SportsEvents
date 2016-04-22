@@ -15,12 +15,13 @@ namespace SportsEvents.Web.Models
         public Address Address { get; set; }
         public string Description { get; set; }
         public string Details { get; set; }
-        public string IconLink { get; set; }
+        public byte[] Icon { get; set; }
         public List<Picture> Pictures { get; set; }
         public string VideoLink { get; set; }
         public string ExternalLink { get; set; }
         public DbGeography Coordinates { get; set; }
-
+        public DateTime BeginTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int CityId { get; set; }
         [ForeignKey("CityId")]
         public City City { get; set; }
@@ -43,7 +44,8 @@ namespace SportsEvents.Web.Models
         public ICollection<ApplicationUser> BookmarkerVisitors { get; set; }
         public ICollection<ApplicationUser> RegisterRequestVisitors { get; set; }
         public ICollection<ApplicationUser> RegisteredVisitors { get; set; }
-
-
+        public ICollection<ApplicationUser> ClickerUsers { get; set; }
     }
+
+  
 }

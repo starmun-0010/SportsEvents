@@ -193,7 +193,10 @@
     <Compile Include="Controllers\PictureService.cs" />
     <Compile Include="Controllers\RootController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="CustomAttirbutes\GreaterOrEqualDateAttribute.cs" />
+    <Compile Include="CustomAttirbutes\GreaterOrEqualTimeAttribute.cs" />
     <Compile Include="CustomAttirbutes\MaxFileSizeAttribute.cs" />
+    <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -203,9 +206,9 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\EFRpository.cs" />
     <Compile Include="Infrastructure\SportsEventsRepository.cs" />
-    <Compile Include="Migrations\201510111727099_Init.cs" />
-    <Compile Include="Migrations\201510111727099_Init.Designer.cs">
-      <DependentUpon>201510111727099_Init.cs</DependentUpon>
+    <Compile Include="Migrations\201511011454423_Init.cs" />
+    <Compile Include="Migrations\201511011454423_Init.Designer.cs">
+      <DependentUpon>201511011454423_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Address.cs" />
@@ -226,6 +229,7 @@
     <Compile Include="ViewModels\EventsViewModel.cs" />
     <Compile Include="ViewModels\EventViewModels\EventCreateViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
+    <Compile Include="ViewModels\MyEventsSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganizerControlPanelViewModel.cs" />
     <Compile Include="ViewModels\OrganizerRegisterViewModel.cs" />
     <Compile Include="ViewModels\PostEventViewModel.cs" />
@@ -237,9 +241,12 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Events.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\PostEvent.css" />
     <Content Include="Content\signup.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -249,6 +256,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Properties\PublishProfiles\df.pubxml" />
     <None Include="Properties\PublishProfiles\temp.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -311,17 +323,22 @@
     <Content Include="Views\Events\Create.cshtml" />
     <Content Include="Views\Events\Delete.cshtml" />
     <Content Include="Views\Events\Details.cshtml" />
-    <Content Include="Views\Events\Edit.cshtml" />
+    <Content Include="Views\Organizer\EditEvent.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Account\OrganizerInformation.cshtml" />
-    <None Include="Views\Cities\GetCities.cshtml" />
-    <None Include="Views\Events\PostEvent.cshtml" />
+    <Content Include="Views\Cities\GetCities.cshtml" />
+    <Content Include="Views\Events\PostEvent.cshtml" />
     <None Include="Views\Events\Search.cshtml" />
     <Content Include="Views\Home\Events.cshtml" />
     <Content Include="Views\Home\Adds.cshtml" />
-    <None Include="Views\Home\Featured.cshtml" />
-    <None Include="Views\Organizer\ControlPanel.cshtml" />
+    <Content Include="Views\Home\Featured.cshtml" />
+    <Content Include="Views\Shared\_OrganizerLayout.cshtml" />
+    <Content Include="Views\Organizer\Dashboard.cshtml" />
+    <None Include="Views\Organizer\MyEvents.cshtml" />
+    <None Include="Views\Organizer\Register.cshtml" />
+    <Content Include="Views\Shared\_OrganizerControlPanelLayout.cshtml" />
+    <None Include="Views\Organizer\RegistrationRequests.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -332,8 +349,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201510111727099_Init.resx">
-      <DependentUpon>201510111727099_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201511011454423_Init.resx">
+      <DependentUpon>201511011454423_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

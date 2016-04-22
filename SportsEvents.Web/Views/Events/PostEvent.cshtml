@@ -146,7 +146,7 @@
                     <div class="col-md-3">
                         @Html.LabelFor(m => m.CityId, new { @class = "control-label" })
                         <div>
-                            @Html.DropDownListFor(m => m.CityId, new SelectList(Model.Cities, "Id", "Name"), "--- Select City ---", new { @class = "form-control", id = "city", disabled = "disabled" })
+                            @Html.DropDownListFor(m => m.CityId, new SelectList(Model.Cities, "Id", "Name"), "--- Select City ---", new { @class = "form-control", id = "city"})
                         </div>
                         @Html.ValidationMessageFor(m => m.CityId, "", new { @class = "text-danger" })
                     </div>

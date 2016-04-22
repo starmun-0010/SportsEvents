@@ -23,6 +23,7 @@ namespace SportsEvents.Web.Models
         public ICollection<Event> BookmarkedEvents { get; set; }
         public ICollection<Event> RegisteredEvents { get; set; }
         public ICollection<Event> RegisterRequestEvents { get; set; }
+        public ICollection<Event> ClickedEvents { get; set; }
 
         public string ContactDetailsId { get; set; }
         public ContactDetails ContactDetails { get; set; }

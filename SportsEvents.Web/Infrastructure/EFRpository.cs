@@ -54,8 +54,8 @@ namespace SportsEvents.Web.Infrastructure
 
         public async Task<int> AddAsync(T entity)
         {
-            DbContext.Set<T>().Add(entity);
-            return await DbContext.SaveChangesAsync();
+            DbContextSingelton.Set<T>().Add(entity);
+            return await DbContextSingelton.SaveChangesAsync();
         }
 
         public async Task<T> GetAsync<TK>(TK id)
@@ -72,6 +72,11 @@ namespace SportsEvents.Web.Infrastructure
 
 
             return await DbContextSingelton.SaveChangesAsync();
+        }
+
+        public int Count(Func<T, bool> pradicate)
+        {
+            return DbContext.Set<T>().Count();
         }
     }
 }

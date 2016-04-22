@@ -20,19 +20,19 @@ namespace SportsEvents.Web.Controllers
             return PartialView(model);
         }
 
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             return View();
         }
 
         public ActionResult Events(int skip = 0, int take = 20)
         {
-            if (take > 20) take = 20;
-            var eventsTask = Repository.Events.Where(e => e.BeginDate > DateTime.Now).OrderBy(e => e.BeginDate).Skip(skip).Take(take).ToListAsync();
-            var countTask = Repository.Events.CountAsync(e => e.BeginDate > DateTime.Now);
+            if (take > 20) { take = 20; }
+            var eventsTask = Repository.Events.Where(e => e.BeginDate > DateTime.Now).OrderBy(e => e.BeginDate).Skip(skip).Take(take).ToList();
+            var countTask = Repository.Events.Where(e => e.BeginDate > DateTime.Now).Count();
 
-            Task.WaitAll(eventsTask, countTask);
-            var model = new EventsViewModel() { Events = eventsTask.Result, Count = countTask.Result, CurrentSkip = skip, CurrentTake = take };
+
+            var model = new EventsViewModel() { Events = eventsTask, Count = countTask, CurrentSkip = skip, CurrentTake = take };
             return PartialView(model);
         }
         public ActionResult About()

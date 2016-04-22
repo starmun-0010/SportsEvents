@@ -16,11 +16,11 @@ namespace SportsEvents.Web.ViewModels
 
         [Display(Name = "Event Type")]
         [Required(ErrorMessage = "Event Type is required.")]
-        public int EventTypeId { get; set; }
+        public int? EventTypeId { get; set; }
 
         [Display(Name = "Sport")]
         [Required(ErrorMessage = "Sport is required.")]
-        public int SportId { get; set; }
+        public int? SportId { get; set; }
 
         [Display(Name = "Event Title")]
         [Required(ErrorMessage = "Event Title is required.")]
@@ -48,7 +48,7 @@ namespace SportsEvents.Web.ViewModels
         [Display(Name = "Event End Date")]
         [Required(ErrorMessage = "Event End Date is required.")]
         [DataType(DataType.Date)]
-
+        [GreaterOrEqualDate("BeginDate", "End date value should be larger or equal to Start date")]
         public DateTime EndDate { get; set; }
 
         [Display(Name = "Event Start Time")]
@@ -60,10 +60,11 @@ namespace SportsEvents.Web.ViewModels
         [Display(Name = "Event End Time")]
         [Required(ErrorMessage = "Event End Time is required.")]
         [DataType(DataType.Time)]
+        [GreaterOrEqualTime("BeginDate", "End Time value should be larger or equal to Start Time")]
 
         public DateTime EndTime { get; set; }
 
-        [MaxFileSize(1024*1024)]
+        [MaxFileSize(1024 * 1024)]
         public HttpPostedFileBase Icon { get; set; }
 
         [Display(Name = "Event's Pictures")]
@@ -90,11 +91,11 @@ namespace SportsEvents.Web.ViewModels
 
         [Required(ErrorMessage = "City is required.")]
         [Display(Name = "City")]
-        public int CityId { get; set; }
+        public int? CityId { get; set; }
 
         [Required(ErrorMessage = "Country is required")]
         [Display(Name = "Country")]
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         [Required(ErrorMessage = "Zip Code is required.")]
         [Display(Name = "Zip Code")]

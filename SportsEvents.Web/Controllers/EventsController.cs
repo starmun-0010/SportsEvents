@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
@@ -46,6 +47,7 @@ namespace SportsEvents.Web.Controllers
         }
 
         // GET: Events/Create
+        [Authorize(Roles = "Organizer, Admin")]
         public ActionResult Create()
         {
             return View();
@@ -55,7 +57,7 @@ namespace SportsEvents.Web.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Organizer", Users = "root")]
+        [Authorize(Roles = "Organizer, Admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(EventCreateViewModel eventViewModel)
         {
@@ -87,9 +89,8 @@ namespace SportsEvents.Web.Controllers
                     eventType = new EventType() { Name = eventViewModel.EventType };
                     DbContext.EventTypes.Add(eventType);
                 }
-                var @event = new Event() { BeginDate = eventViewModel.BeginDate, EndDate = eventViewModel.EndDate, Description = eventViewModel.Description, Details = eventViewModel.Details, Sport = sport, EventType = eventType, ExternalLink = eventViewModel.ExternalLink, IconLink = iconLink, Pictures = pictures, StartingPrice = eventViewModel.StartingPrice, VideoLink = eventViewModel.VideoLink, Organizer = organizer, Coordinates = coordinates };
-                DbContext.Events.Add(@event);
-                await DbContext.SaveChangesAsync();
+                var @event = new Event() { BeginDate = eventViewModel.BeginDate, EndDate = eventViewModel.EndDate, Description = eventViewModel.Description, Details = eventViewModel.Details, Sport = sport, EventType = eventType, ExternalLink = eventViewModel.ExternalLink, Pictures = pictures, StartingPrice = eventViewModel.StartingPrice, VideoLink = eventViewModel.VideoLink, Organizer = organizer, Coordinates = coordinates };
+                await Repository.Events.AddAsync(@event);
                 return RedirectToAction("Index");
             }
 
@@ -165,7 +166,11 @@ namespace SportsEvents.Web.Controllers
 
         public ActionResult PostEvent()
         {
-            if (!((ClaimsIdentity)User.Identity).HasClaim("IsOrganizer", "true"))
+            var user = UserManager.FindByNameAsync(User.Identity.Name).Result;
+
+            ClaimsIdentity identity = UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie).Result;
+
+            if (!identity.HasClaim(e => e.Type == "IsOrganizer" && e.Value == "true"))
             {
                 return RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
             }
@@ -187,23 +192,68 @@ namespace SportsEvents.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PostEvent(PostEventViewModel model)
+        public async Task<ActionResult> PostEvent(PostEventViewModel model)
         {
+            var user = UserManager.FindByNameAsync(User.Identity.Name).Result;
 
-            if (!((ClaimsIdentity)User.Identity).HasClaim("IsOrganizer", "true"))
+            ClaimsIdentity identity = UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie).Result;
+
+            if (!identity.HasClaim(e => e.Type == "IsOrganizer" && e.Value == "true"))
             {
                 return RedirectToAction("OrganizerInformation", "Account", new { name = User.Identity.Name });
             }
             if (ModelState.IsValid)
             {
+                var city = await Repository.Cities.GetAsync(model.CityId);
+                var eventType = await Repository.EventTypes.GetAsync(model.EventTypeId);
+                var sport = await Repository.Sports.GetAsync(model.SportId);
+                var address = new Address()
+                {
+                    CityId = model.CityId ?? 0,
+                    CountryName = city.CountryName,
+                    Zip = model.Zip,
+                    LineTwo = model.AddressLineTwo,
+                    LineOne = model.AddressLineOne,
+                    CityName = city.Name
+                };
+                byte[] icon = null;
+                using (var inputStream = model.Icon?.InputStream)
+                {
+                    var memoryStream = inputStream as MemoryStream;
+                    if (memoryStream == null)
+                    {
+                        memoryStream = new MemoryStream();
+                        var copyToAsync = inputStream?.CopyToAsync(memoryStream);
+                        if (copyToAsync != null)
+                            await copyToAsync;
+                    }
+                    icon = memoryStream.ToArray();
+                }
                 var @event = new Event()
                 {
                     OrganizerId = User.Identity.GetUserId(),
-
-
+                    Address = address,
+                    AddressString = address.ToString(),
+                    BeginDate = model.BeginDate,
+                    BeginTime = model.BeginTime,
+                    EndTime = model.EndTime,
+                    EndDate = model.EndDate,
+                    Description = model.Title,
+                    EventTypeId = eventType.Id,
+                    EventTypeName = eventType.Name,
+                    SportId = sport.Id,
+                    CityId = city.Id,
+                    SportName = sport.Name,
+                    Details = model.Description,
+                    VideoLink = model.VideoLink,
+                    StartingPrice = model.Price,
+                    Icon = icon,
+                    ExternalLink = model.SocialMediaLink,
+                    OrganizerName = user.UserName,
+                    
                 };
-                Repository.Events.AddAsync(@event);
-                return RedirectToAction("ControlPanel", "Organizer");
+                Console.WriteLine(await Repository.Events.AddAsync(@event));
+                return RedirectToAction("Dashboard", "Organizer");
             }
             var eventTypesTask = Repository.EventTypes.AllAsync();
             var sportsTask = Repository.Sports.AllAsync();

@@ -12,11 +12,11 @@ namespace SportsEvents.Web.Infrastructure
         IQueryable<T> Where(Expression<Func<T, bool>> predicate);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate);
         Task<long> CountAsync();
-
         Task<List<T>> AllAsync();
         Task<T> GetAsync(int id);
         Task<int> AddAsync(T entity);
         Task<T> GetAsync<TK>(TK contactDetailsId);
         Task<int> Update(T entity);
+        int Count(Func<T, bool> pradicate);
     }
 }

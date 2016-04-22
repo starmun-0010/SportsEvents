@@ -62,7 +62,7 @@ namespace SportsEvents.Web.Migrations
                         Address = new Address()
                     };
 
-                    usermanager.Create(user);
+                    usermanager.Create(user,"idkwmpsb");
                 }
                 context.Advertisements.AddRange(advertisements);
                 var organizers = context.Users.ToList();
@@ -105,26 +105,51 @@ namespace SportsEvents.Web.Migrations
                         var @event = new Event
                         {
                             BeginDate = beginDate,
+                            BeginTime = DateTime.Now,
+                            EndTime = DateTime.Now,
+                           
                             Address = address,
                             Description = description,
                             Details = detail,
                             EndDate = endDate,
                             StartingPrice = rand.Next(0, 1000),
-                            IconLink =
-                                "https://placeholdit.imgix.net/~text?txtsize=25&txt=Icon+" + Ipsum.GetWord() +
-                                "&w=100&h=100&+",
+                           
                             VideoLink = "https://placehold.it/600x400?text=" + Ipsum.GetWord(),
                             Pictures = pictures,
                             Sport = sport,
-                            SportName = sport.Name,
+                            SportName = sport.Name,  
                             EventType = eventType,
                             EventTypeName = eventType.Name,
                             Organizer = organizer,
                             City = cities[rand.Next(cities.Count)],
                             OrganizerName = organizer.UserName,
                             IsFeatured = rand.Next(2) == 1,
-
+                            
                         };
+                        @event.RegisterRequestVisitors=new List<ApplicationUser>();
+                        @event.BookmarkerVisitors= new List<ApplicationUser>();
+                        @event.RegisteredVisitors = new List<ApplicationUser>();
+                        @event.ClickerUsers  = new List<ApplicationUser>();
+                        for (int k= 0; k < rand.Next(organizers.Count)/2;k++)
+                        {
+                            @event.RegisterRequestVisitors.Add(organizers[k]);
+                            
+                        }
+                        for (int k = 0; k < rand.Next(organizers.Count) / 2; k++)
+                        {
+                            @event.RegisteredVisitors.Add(organizers[k]);
+
+                        }
+                        for (int k = 0; k < rand.Next(organizers.Count) / 2; k++)
+                        {
+                            @event.ClickerUsers.Add(organizers[k]);
+
+                        }
+                        for (int k = 0; k < rand.Next(organizers.Count) / 2; k++)
+                        {
+                            @event.BookmarkerVisitors.Add(organizers[k]);
+
+                        }
                         events.Add(@event);
                     }
                 }

@@ -31,7 +31,7 @@ namespace SportsEvents.Web
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap.css", "~/Content/font-awesome.css",
                       "~/Content/site.css", "~/Content/Events.css", "~/Content/signup.css", "~/Content/PostEvent.css"));
         }
     }

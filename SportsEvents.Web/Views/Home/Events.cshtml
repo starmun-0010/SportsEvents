@@ -1,13 +1,34 @@
-﻿@model SportsEvents.Web.ViewModels.EventsViewModel
+﻿@using System.Drawing
+@model SportsEvents.Web.ViewModels.EventsViewModel
 <div class="batch">
+    @{ var rand = new Random();}
+
     @foreach (var _event in Model.Events)
     {
         <div class="event">
             <div class="row ">
                 <div class="col-xs-2 col-lg-2 icon">
                     <a href="@_event.ExternalLink">
-                        <img height="100" width="100" src="@_event.IconLink" />
+
+                        @{
+                            var source = string.Empty;
+                            if (_event.Icon?.Length > 0)
+                            {
+
+                                source = ViewBag.BaseUrl + "/Images/Thumbnail/" + _event.Id;
+                            }
+                            else
+                            {
+                                var color = Color.FromArgb(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+                                source = "http://placeskull.com/50/50/" + ColorTranslator.ToHtml(color).Substring(1) + "/" + rand.Next(1, 45);
+                            }
+
+
+                            <img height="100" width="100" src="@source"/>
+                        }
+
                     </a>
+
                 </div>
                 <div class="col-xs-8 col-lg-8 header">
                     <a href="@_event.ExternalLink">

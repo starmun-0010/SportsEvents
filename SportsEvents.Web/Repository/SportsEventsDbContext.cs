@@ -36,6 +36,10 @@ namespace SportsEvents.Web.Repository
             modelBuilder.Entity<Event>().HasMany(e => e.RegisteredVisitors).WithMany(e => e.RegisteredEvents).Map(e => e.ToTable("RegisterdEventVisitors"));
             modelBuilder.Entity<Event>().HasMany(e => e.BookmarkerVisitors).WithMany(e => e.BookmarkedEvents).Map(e => e.ToTable("BookmarkerEventVisitors"));
             modelBuilder.Entity<Event>().HasMany(e => e.RegisterRequestVisitors).WithMany(e => e.RegisterRequestEvents).Map(e => e.ToTable("RegisterRequestEventVisitors"));
+            modelBuilder.Entity<Event>()
+                .HasMany(e => e.ClickerUsers)
+                .WithMany(e => e.ClickedEvents)
+                .Map(e => e.ToTable("ClickerEventUsers"));
             modelBuilder.Entity<ApplicationUser>()
                 .HasOptional(e => e.ContactDetails)
                 .WithMany()

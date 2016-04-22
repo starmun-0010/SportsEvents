@@ -5,20 +5,30 @@
     {
         @Html.AntiForgeryToken()
 
-        <ul class="nav navbar-nav navbar-right">
-            <li>
+        <ul>
+            <li><a class="glyphicon glyphicon-bell"> <span>@ViewBag.NotificatonsCount</span></a></li>
+            <li><a class="glyphicon glyphicon-envelope"> <span>@ViewBag.MessagesCount</span></a></li>
+            <li class="dropdown">
+                <ul class="dropdown-menu">
+                    @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                    <li>
+                        @Html.ActionLink("Dashboard", "Dashboard", "Organizer")
+                    </li>
+                </ul>
 
-                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
             </li>
-            <li>@Html.ActionLink("Create Your Own Sports Events", "PostEvent", "Events", routeValues: new { role = "Organizer" }, htmlAttributes: new { id = "registerLink" })</li>
+            @if (!User.IsInRole("Organizer"))
+            {
+                <li>@Html.ActionLink("Create Your Own Events!", "PostEvent", "Events", routeValues: new { role = "Organizer" }, htmlAttributes: new { id = "registerLink" })</li>
+            }
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         </ul>
     }
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Create Your Own Sports Events", "Login", "Account", routeValues: new { role = "Organizer" }, htmlAttributes: new { id = "registerLink" })</li>
+    <ul>
+        <li>@Html.ActionLink("Create Your Own Events!", "Login", "Account", null, htmlAttributes: new { id = "registerLink" })</li>
         <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>
 }

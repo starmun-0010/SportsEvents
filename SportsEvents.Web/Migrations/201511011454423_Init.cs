@@ -21,6 +21,25 @@ namespace SportsEvents.Web.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.ContactDetails",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        FirstName = c.String(),
+                        LastName = c.String(),
+                        Email = c.String(),
+                        Address_LineOne = c.String(),
+                        Address_LineTwo = c.String(),
+                        Address_CityName = c.String(),
+                        Address_CountryName = c.String(),
+                        Address_CityId = c.Int(nullable: false),
+                        Address_Zip = c.String(),
+                        Address_State = c.String(),
+                        Phone = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.Countries",
                 c => new
                     {
@@ -47,10 +66,12 @@ namespace SportsEvents.Web.Migrations
                         Address_State = c.String(),
                         Description = c.String(),
                         Details = c.String(),
-                        IconLink = c.String(),
+                        Icon = c.Binary(),
                         VideoLink = c.String(),
                         ExternalLink = c.String(),
                         Coordinates = c.Geography(),
+                        BeginTime = c.DateTime(nullable: false),
+                        EndTime = c.DateTime(nullable: false),
                         CityId = c.Int(nullable: false),
                         AddressString = c.String(),
                         SportId = c.Int(nullable: false),
@@ -118,25 +139,6 @@ namespace SportsEvents.Web.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
-            
-            CreateTable(
-                "dbo.ContactDetails",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        FirstName = c.String(),
-                        LastName = c.String(),
-                        Email = c.String(),
-                        Address_LineOne = c.String(),
-                        Address_LineTwo = c.String(),
-                        Address_CityName = c.String(),
-                        Address_CountryName = c.String(),
-                        Address_CityId = c.Int(nullable: false),
-                        Address_Zip = c.String(),
-                        Address_State = c.String(),
-                        Phone = c.String(),
-                    })
-                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.AspNetUserLogins",
@@ -249,6 +251,19 @@ namespace SportsEvents.Web.Migrations
                 .Index(t => t.ApplicationUser_Id);
             
             CreateTable(
+                "dbo.ClickerEventUsers",
+                c => new
+                    {
+                        Event_Id = c.Int(nullable: false),
+                        ApplicationUser_Id = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.Event_Id, t.ApplicationUser_Id })
+                .ForeignKey("dbo.Events", t => t.Event_Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id, cascadeDelete: true)
+                .Index(t => t.Event_Id)
+                .Index(t => t.ApplicationUser_Id);
+            
+            CreateTable(
                 "dbo.RegisterdEventVisitors",
                 c => new
                     {
@@ -286,6 +301,8 @@ namespace SportsEvents.Web.Migrations
             DropForeignKey("dbo.RegisterdEventVisitors", "Event_Id", "dbo.Events");
             DropForeignKey("dbo.Pictures", "Event_Id", "dbo.Events");
             DropForeignKey("dbo.Events", "EventTypeId", "dbo.EventTypes");
+            DropForeignKey("dbo.ClickerEventUsers", "ApplicationUser_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.ClickerEventUsers", "Event_Id", "dbo.Events");
             DropForeignKey("dbo.Events", "CityId", "dbo.Cities");
             DropForeignKey("dbo.Cities", "CountryId", "dbo.Countries");
             DropForeignKey("dbo.BookmarkerEventVisitors", "ApplicationUser_Id", "dbo.AspNetUsers");
@@ -302,6 +319,8 @@ namespace SportsEvents.Web.Migrations
             DropIndex("dbo.RegisterRequestEventVisitors", new[] { "Event_Id" });
             DropIndex("dbo.RegisterdEventVisitors", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.RegisterdEventVisitors", new[] { "Event_Id" });
+            DropIndex("dbo.ClickerEventUsers", new[] { "ApplicationUser_Id" });
+            DropIndex("dbo.ClickerEventUsers", new[] { "Event_Id" });
             DropIndex("dbo.BookmarkerEventVisitors", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.BookmarkerEventVisitors", new[] { "Event_Id" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
@@ -322,6 +341,7 @@ namespace SportsEvents.Web.Migrations
             DropIndex("dbo.Events", new[] { "CityId" });
             DropTable("dbo.RegisterRequestEventVisitors");
             DropTable("dbo.RegisterdEventVisitors");
+            DropTable("dbo.ClickerEventUsers");
             DropTable("dbo.BookmarkerEventVisitors");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Sports");
@@ -331,11 +351,11 @@ namespace SportsEvents.Web.Migrations
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.Messages");
             DropTable("dbo.AspNetUserLogins");
-            DropTable("dbo.ContactDetails");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.Events");
             DropTable("dbo.Countries");
+            DropTable("dbo.ContactDetails");
             DropTable("dbo.Advertisements");
         }
     }

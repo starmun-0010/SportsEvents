@@ -57,7 +57,7 @@ namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
                         Address = new Address()
                     };
 
-                    usermanager.Create(user);
+                    usermanager.Create(user,"idkwmpsb");
                 }
                 context.Advertisements.AddRange(advertisements);
                 var organizers = context.Users.ToList();
@@ -73,20 +73,20 @@ namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
                     for (var j = 0; j < 20; j++)
                     {
                         var pictures = new List<Picture>();
-                        for (int k = 0; k < rand.Next(1,5); k++)
+                        for (int k = 0; k < rand.Next(1, 5); k++)
                         {
                             pictures.Add(new Picture() { Url = "https://placehold.it/1000x800?text=" + Ipsum.GetWord() });
                         }
 
-                        var description = Ipsum.GetPhrase(rand.Next(1,10));
+                        var description = Ipsum.GetPhrase(rand.Next(1, 10));
                         var beginDate = DateTime.Now.Date + TimeSpan.FromDays(rand.Next(1, 15));
                         var detail = Ipsum.GetPhrase(rand.Next(40, 200));
                         var endDate = beginDate + TimeSpan.FromDays(rand.Next(1, 15));
                         var organizer = organizers[rand.Next(organizers.Count)];
                         var address = new Address
                         {
-                            LineOne = Ipsum.GetPhrase(rand.Next(1,10)),
-                            LineTwo = Ipsum.GetPhrase(rand.Next(1,10))
+                            LineOne = Ipsum.GetPhrase(rand.Next(1, 10)),
+                            LineTwo = Ipsum.GetPhrase(rand.Next(1, 10))
                         };
                         if (!String.IsNullOrEmpty(description))
                         {
@@ -100,14 +100,15 @@ namespace SportsEvents.Web.Infrastructure.DatabaseInitializer
                         var @event = new Event
                         {
                             BeginDate = beginDate,
+                            BeginTime = DateTime.Now,
+                            EndTime = DateTime.Now,
+
                             Address = address,
                             Description = description,
                             Details = detail,
                             EndDate = endDate,
                             StartingPrice = rand.Next(0, 1000),
-                            IconLink =
-                                "https://placeholdit.imgix.net/~text?txtsize=25&txt=Icon+" + Ipsum.GetWord() +
-                                "&w=100&h=100&+",
+
                             VideoLink = "https://placehold.it/600x400?text=" + Ipsum.GetWord(),
                             Pictures = pictures,
                             Sport = sport,

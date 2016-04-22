@@ -1,6 +1,10 @@
 ﻿
 @{
     ViewBag.Title = "Home Page";
+    if (User.IsInRole("Organizer"))
+    {
+        Layout = "../Shared/_OrganizerLayout.cshtml";
+    }
 }
 
 <div>

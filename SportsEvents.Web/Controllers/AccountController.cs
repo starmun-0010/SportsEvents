@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SportsEvents.Web.Models;
@@ -23,28 +22,6 @@ namespace SportsEvents.Web.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
-        public AccountController()
-        {
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get { return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
-            private set { _signInManager = value; }
-        }
-        
-        public ApplicationUserManager UserManager
-        {
-            get { return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
-            private set { _userManager = value; }
-        }
 
         //
         // GET: /Account/Login
@@ -73,6 +50,10 @@ namespace SportsEvents.Web.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    if (User.IsInRole("OrganizerCandidate"))
+                    {
+                        return RedirectToAction("OrganizerInformation");
+                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -110,10 +91,6 @@ namespace SportsEvents.Web.Controllers
                 return View(model);
             }
 
-            // The following code protects for brute force attacks against the two factor codes. 
-            // If a user enters incorrect codes for a specified amount of time then the user account 
-            // will be locked out for a specified amount of time. 
-            // You can configure the account lockout settings in IdentityConfig
             var result =
                 await
                     SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe,
@@ -330,7 +307,7 @@ namespace SportsEvents.Web.Controllers
                         FirstName = model.ContactFirstName,
                         LastName = model.ContactLastName,
                         Phone = model.ContactPhone,
-                        
+
                     };
                 }
                 else
@@ -340,7 +317,7 @@ namespace SportsEvents.Web.Controllers
                     contactDetails.Address.CountryName = contactCity.CountryName;
                     contactDetails.Address.LineOne = model.ContactLineOne;
                     contactDetails.Address.LineTwo = model.ContactLineTwo;
-                    
+
                     contactDetails.Address.Zip = model.ContactZip;
                     contactDetails.Address.State = model.ContactState;
                     contactDetails.Email = model.ConatactEmail;
@@ -352,18 +329,17 @@ namespace SportsEvents.Web.Controllers
                 }
 
 
+                ClaimsIdentity identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
 
-                user.Claims.Add(new IdentityUserClaim() { ClaimType = "IsOrganizer", ClaimValue = "true" });
+                if (!identity.HasClaim(ClaimTypes.Role, "OrganizerCandidate"))
+                {
+                    await UserManager.RemoveClaimAsync(User.Identity.GetUserId(), new Claim(ClaimTypes.Role, "OrganizerCandidate"));
+
+                    await UserManager.AddClaimAsync(User.Identity.GetUserId(), new Claim(ClaimTypes.Role, "Organizer"));
+
+                }
 
 
-
-
-
-                result = await UserManager.UpdateAsync(user);
-
-
-
-                AddErrors(result);
 
                 return RedirectToAction("PostEvent", "Events");
             }
@@ -641,22 +617,7 @@ namespace SportsEvents.Web.Controllers
             get { return HttpContext.GetOwinContext().Authentication; }
         }
 
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
 
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
 
         internal class ChallengeResult : HttpUnauthorizedResult
         {
